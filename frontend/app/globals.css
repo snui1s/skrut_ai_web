@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F6F1EE;
+  --foreground: #6C5F5B;
+  --primary: #ED7D31;
+  --secondary: #4F4A45;
+  --muted: #6C5F5B;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+/*   :root {
+    --background: #4F4A45;
+    --foreground: #F6F1EE;
+    --primary: #ED7D31;
+    --secondary: #F6F1EE;
+    --muted: #A0A0A0; 
+  } */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+.animate-dash {
+  animation: dash 3s linear infinite;
+}
