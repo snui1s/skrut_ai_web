@@ -64,8 +64,8 @@ class ResumeJudgeGraph:
         3. **Constructive Feedback**: Instead of just listing "Missing A, B, C", frame it as "Candidate would be a stronger match if they highlighted experience with [A] or completed a workshop on [B]."
         
         Output Requirements (ALWAYS RESPOND IN THAI):
-        0. **Candidate Metadata**:
-           - Name: [Full Name in English or Thai]
+        0. **Candidate Metadata** (IMPORTANT: Keep name EXACTLY as written in resume, DO NOT translate names):
+           - Name: [Use the EXACT name from the resume - do not translate or transliterate]
            - Email: [Email Address]
         1. Score (0-10): Fair score including partial credits for related skills.
         2. Analysis (MUST BE IN THAI): 

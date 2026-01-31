@@ -1,43 +1,23 @@
-#You can change this file to any job description you want
+Job Summary
+พัฒนาและประยุกต์ใช้โมเดล AI (โดยเฉพาะ LLMs) เพื่อสร้าง Solution ที่ตอบโจทย์ธุรกิจ เน้นการทำ RAG และการเชื่อมต่อ AI เข้ากับ Software Ecosystem ของบริษัท
 
-Job Description: Electrical Engineer (Power & Maintenance)
-สรุปภาพรวม: รับผิดชอบการออกแบบ, ติดตั้ง, ควบคุม และบำรุงรักษาระบบไฟฟ้าแรงสูงและแรงต่ำ (Power Distribution) รวมถึงหม้อแปลงไฟฟ้า (Transformer) และตู้ควบคุมไฟฟ้า (MDB/DB) ภายในโรงงานอุตสาหกรรม เพื่อให้ระบบทำงานได้อย่างเสถียรและปลอดภัยสูงสุด
+Key Responsibilities
+AI Development: ออกแบบและพัฒนา AI Application โดยเน้นเทคนิค RAG และ Agentic AI
 
-หน้าที่ความรับผิดชอบหลัก (Key Responsibilities):
-1.ระบบหม้อแปลง (Transformer System):
+System Integration: เชื่อมต่อโมเดลผ่าน API และพัฒนา Backend รองรับ (FastAPI/Node.js)
 
-- วางแผนและควบคุมการบำรุงรักษาเชิงป้องกัน (Preventive Maintenance) ของหม้อแปลงไฟฟ้า
+Data Handling: จัดการข้อมูลและใช้งาน Vector Databases เพื่อเพิ่มประสิทธิภาพการค้นหาข้อมูล
 
-- ตรวจสอบค่าความเป็นฉนวน, ระดับน้ำมัน, และอุณหภูมิ เพื่อป้องกันการเกิดระเบิดหรือไฟดับ (Power Outage)
+Technical Requirements
+Stack: Python, LangChain/LlamaIndex, Docker
 
-2.ระบบตู้ไฟฟ้าและแผงควบคุม (MDB & Switchgear):
+AI Tools: มีประสบการณ์ใช้งาน OpenAI API, Anthropic หรือ Open-source LLMs
 
-- ดูแลและตรวจสอบตู้ Main Distribution Board (MDB), Capacitor Bank และเครื่องตัดไฟ (Circuit Breakers)
+Database: เข้าใจการใช้งาน SQL และ Vector Search (เช่น Chroma, Pinecone หรือ Qdrant)
 
-- วิเคราะห์ค่าทางไฟฟ้า เช่น Power Factor, Harmonics เพื่อลดค่าไฟและเพิ่มประสิทธิภาพการใช้พลังงาน
+Mindset: เน้นการแก้ปัญหา (Problem Solving) และสามารถนำ AI Tools มาช่วยเพิ่มความเร็วในการ Dev ได้
 
-3.งานซ่อมบำรุงและแก้ไขปัญหา (Troubleshooting):
+Qualifications
+วุฒิปริญญาตรี Computer Science หรือสาขาที่เกี่ยวข้อง
 
-- วิเคราะห์หาสาเหตุเมื่อเกิดระบบไฟฟ้าขัดข้อง (Root Cause Analysis) และดำเนินการแก้ไขอย่างเร่งด่วนเพื่อไม่ให้กระทบสายการผลิต
-
-- จัดทำรายงานสรุปผลการซ่อมบำรุงและเสนอแนะแนวทางป้องกัน
-
-4.ความปลอดภัยและมาตรฐาน (Safety & Compliance):
-
-- ควบคุมการทำงานให้เป็นไปตามมาตรฐานวิศวกรรม (วสท.) และกฎหมายความปลอดภัยของกรมโรงงาน
-
-- ดูแลระบบสายดิน (Grounding) และระบบป้องกันฟ้าผ่า
-
-คุณสมบัติที่ต้องการ (Qualifications):
-
-1.การศึกษา: ปริญญาตรี วิศวกรรมศาสตร์บัณฑิต (สาขาไฟฟ้ากำลัง)
-
-2.ใบอนุญาต: ต้องมี ใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม (กว.) ระดับภาคีวิศวกรขึ้นไป
-
-3.ทักษะทางเทคนิค:
-
-- สามารถอ่านและเขียนแบบ Single Line Diagram (SLD) ด้วย AutoCAD ได้
-
-- มีความรู้เรื่องอุปกรณ์ไฟฟ้าโรงงาน เช่น PLC, Inverter, Motor Control
-
-4.ทักษะเสริม: หากมีความสามารถในการวิเคราะห์ข้อมูลการใช้ไฟ (Energy Management) จะพิจารณาเป็นพิเศษ
+มี Logic ที่แม่นยำ และมีความเข้าใจใน AI Lifecycle

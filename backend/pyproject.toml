@@ -14,4 +14,5 @@ dependencies = [
     "pymupdf",
     "python-dotenv",
     "langchain-ollama",
+    "python-multipart>=0.0.22",
 ]
