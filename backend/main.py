@@ -68,60 +68,113 @@ def update_job_description(content: str):
 # --- Core Endpoint: Upload -> Process -> Return (Stateless) ---
 
 
-@app.post("/evaluate", response_model=EvaluationResult)
+@app.post("/evaluate")
 async def evaluate_resume_endpoint(file: UploadFile = File(...)):
-    # 1. Save to Temp File (so we can read it, then delete immediately)
-    file_ext = os.path.splitext(file.filename)[1]
-    tmp_path = ""
+    async def event_generator():
+        # 1. Save to Temp File
+        yield json.dumps(
+            {"status": "progress", "message": f"Saving {file.filename}..."}
+        ) + "\n"
+        file_ext = os.path.splitext(file.filename)[1]
+        tmp_path = ""
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp_file:
-        shutil.copyfileobj(file.file, tmp_file)
-        tmp_path = tmp_file.name
+        try:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp_file:
+                shutil.copyfileobj(file.file, tmp_file)
+                tmp_path = tmp_file.name
 
-    try:
-        # 2. Extract Text (OCR)
-        print(f"Processing OCR for: {file.filename}")
-        resume_text = extract_text_from_pdf(tmp_path)
+            # 2. Extract Text (OCR)
+            yield json.dumps(
+                {"status": "progress", "message": "Extracting text (OCR)..."}
+            ) + "\n"
+            resume_text = extract_text_from_pdf(tmp_path)
 
-        if not resume_text or len(resume_text.strip()) == 0:
-            raise HTTPException(
-                status_code=400, detail="Could not extract text from resume."
-            )
+            if not resume_text or len(resume_text.strip()) == 0:
+                yield json.dumps(
+                    {
+                        "status": "error",
+                        "message": "Could not extract text from resume.",
+                    }
+                ) + "\n"
+                return
 
-        # 3. Get Job Description
-        if not os.path.exists(JD_FILE):
-            raise HTTPException(status_code=400, detail="Job description not found.")
+            # 3. Get Job Description
+            if not os.path.exists(JD_FILE):
+                yield json.dumps(
+                    {"status": "error", "message": "Job description not found."}
+                ) + "\n"
+                return
 
-        with open(JD_FILE, "r", encoding="utf-8") as f:
-            jd_text = f.read()
+            with open(JD_FILE, "r", encoding="utf-8") as f:
+                jd_text = f.read()
 
-        # 4. AI Agent Analysis
-        print(f"Running Agentic Analysis...")
-        result = evaluate_resume(
-            resume_text, jd_text
-        )  # This is synchronous in our service
+            # 4. AI Agent Analysis (Streaming Graph)
+            yield json.dumps(
+                {"status": "progress", "message": "AI Agents are thinking..."}
+            ) + "\n"
 
-        # 5. Return Result Immediately
-        return EvaluationResult(
-            score=str(result["score"]),
-            candidate_name=result.get("name", "Unknown Candidate"),
-            email=result.get("email", "N/A"),
-            analysis=result["analysis"],
-            conversation_log=result.get("conversation_log", []),
-        )
+            from services.ai import ResumeJudgeGraph
 
-    except Exception as e:
-        print(f"Error processing resume: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+            judge_graph = ResumeJudgeGraph()
+            graph_app = judge_graph.build_graph()
 
-    finally:
-        # 6. CLEANUP: Delete the temp file immediately
-        if tmp_path and os.path.exists(tmp_path):
-            try:
+            initial_state = {
+                "resume_text": resume_text,
+                "job_description": jd_text,
+                "reviewer_output": "",
+                "feedback_history": [],
+                "conversation_history": [],
+                "retry_count": 0,
+                "temp_status": "START",
+                "status_message": "Starting Multi-Agent Analysis...",
+            }
+
+            # Run the graph and stream node updates
+            final_state_data = {}
+            async for output in graph_app.astream(initial_state):
+                # output is a dict where keys are node names
+                for node_name, state_update in output.items():
+                    msg = state_update.get(
+                        "status_message", f"{node_name.capitalize()} working..."
+                    )
+                    yield json.dumps({"status": "progress", "message": msg}) + "\n"
+                    # Accumulate state updates to get the final version
+                    final_state_data.update(state_update)
+
+            # 5. Final Extraction & Result
+            from services.ai import extract_score, extract_name, extract_email
+
+            evaluation_text = final_state_data.get("reviewer_output", "")
+
+            if not evaluation_text:
+                yield json.dumps(
+                    {
+                        "status": "error",
+                        "message": "Agents failed to produce evaluation.",
+                    }
+                ) + "\n"
+                return
+
+            result = {
+                "status": "completed",
+                "score": str(extract_score(evaluation_text)),
+                "candidate_name": extract_name(evaluation_text),
+                "email": extract_email(evaluation_text),
+                "analysis": evaluation_text,
+                "conversation_log": final_state_data.get("conversation_history", []),
+            }
+            yield json.dumps(result) + "\n"
+
+        except Exception as e:
+            print(f"Error: {e}")
+            yield json.dumps({"status": "error", "message": str(e)}) + "\n"
+        finally:
+            if tmp_path and os.path.exists(tmp_path):
                 os.remove(tmp_path)
-                print(f"Deleted temp file: {tmp_path}")
-            except Exception as e:
-                print(f"Warning: Failed to delete temp file {tmp_path}: {e}")
+
+    from fastapi.responses import StreamingResponse
+
+    return StreamingResponse(event_generator(), media_type="application/x-ndjson")
 
 
 if __name__ == "__main__":

@@ -23,6 +23,7 @@ class GraphState(TypedDict):
     retry_count: int
     # Removed "status" field
     temp_status: str  # Internal use only
+    status_message: str  # Human-readable status for UI
 
 
 # --- 2. Node Logic ---
@@ -108,6 +109,7 @@ class ResumeJudgeGraph:
             "reviewer_output": response.content,
             "retry_count": state["retry_count"] + 1,
             "conversation_history": updated_history,
+            "status_message": f"Reviewer finished analysis (Attempt {state['retry_count'] + 1})",
         }
 
     def node_2_auditor(self, state: GraphState):
@@ -176,6 +178,7 @@ class ResumeJudgeGraph:
             "feedback_history": new_feedback_history,
             "conversation_history": updated_conv_history,
             "temp_status": graph_status_signal,  # Internal use only
+            "status_message": f"Auditor verified: {graph_status_signal}",
         }
 
     def build_graph(self):

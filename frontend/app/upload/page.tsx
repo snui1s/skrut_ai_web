@@ -106,24 +106,54 @@ export default function UploadPage() {
 
             if (!response.ok) throw new Error(`Analysis failed for ${file.name}`);
 
-            const result = await response.json();
-            results.push({
-                filename: file.name,
-                ...result
-            });
+            // Handle Streaming Response
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            
+            if (!reader) throw new Error("Could not get stream reader");
+
+            let done = false;
+            let buffer = "";
+
+            while (!done) {
+                const { value, done: doneReading } = await reader.read();
+                done = doneReading;
+                const chunk = decoder.decode(value || new Uint8Array(), { stream: !done });
+                buffer += chunk;
+
+                const lines = buffer.split("\n");
+                buffer = lines.pop() || ""; // Keep the last incomplete line in buffer
+
+                for (const line of lines) {
+                    if (!line.trim()) continue;
+                    try {
+                        const event = JSON.parse(line);
+                        
+                        if (event.status === "progress") {
+                            // Update the UI with the detailed agent status
+                            setLoadingStatus("analyzing");
+                            setCurrentFileName(`${file.name} — ${event.message}`);
+                        } else if (event.status === "completed") {
+                            results.push({
+                                filename: file.name,
+                                ...event
+                            });
+                        } else if (event.status === "error") {
+                            console.error(`Error analyzing ${file.name}: ${event.message}`);
+                            throw new Error(event.message);
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse stream line:", line, e);
+                    }
+                }
+            }
 
         } catch (err) {
             console.error(err);
-             // FALLBACK: If total failure (e.g. 500 error), still try to show something useful
-             // For a real app, maybe we parse the partial response if possible, but here we just give a generic error state
-             // User requested "latest score if fail", but since this is a fetch failure, we don't have ANY score from the backend.
-             // We will stick to "0" or "Error" here, as we literally have nothing. 
-             // BUT, if the user meant "If the Agent FAILS to pass", the backend already returns the latest score anyway!
-             // So this catch block is only for NETWORK/SERVER errors.
             results.push({
                 filename: file.name,
-                score: '0', // Or "Error"
-                analysis: 'System Error: Failed to process this file. Please try again.',
+                score: '0',
+                analysis: `Error: ${err instanceof Error ? err.message : 'Failed to process this file.'}`,
                 conversation_log: []
             });
         }
