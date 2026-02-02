@@ -1,8 +1,7 @@
 import os
-import shutil
 import uuid
 import json
-import tempfile
+import io
 from typing import List, Optional
 from fastapi import FastAPI, Depends, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
@@ -13,15 +12,11 @@ from services.ai import evaluate_resume
 
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-# No more persistent data storage (resumes folder or DB)
-JD_FILE = BASE_DIR / "data" / "job_description.txt"
-
-# Ensure data dir exists for JD file (optional config)
-data_dir = BASE_DIR / "data"
-if not data_dir.exists():
-    data_dir.mkdir(parents=True)
-
+# --- IN-MEMORY STORAGE ---
+# Since Serverless (Vercel/Render) is Read-Only, we cannot write to disk.
+# We use a global variable to store the JD temporarily.
+# This resets when the server instance recycles, which is acceptable for this use case.
+GLOBAL_JOB_DESCRIPTION = ""
 
 app = FastAPI(title="Skrut AI")
 
@@ -52,47 +47,44 @@ def health_check():
 
 @app.get("/")
 def read_root():
-    return {"status": "ok", "mode": "privacy-focused"}
+    return {
+        "status": "ok",
+        "mode": "privacy-focused",
+        "filesysten": "read-only-compatible",
+    }
 
 
 @app.get("/job-description")
 def get_job_description():
-    if not os.path.exists(JD_FILE):
-        return {"content": ""}
-    with open(JD_FILE, "r", encoding="utf-8") as f:
-        return {"content": f.read()}
+    return {"content": GLOBAL_JOB_DESCRIPTION}
 
 
 @app.post("/job-description")
 def update_job_description(content: str):
-    with open(JD_FILE, "w", encoding="utf-8") as f:
-        f.write(content)
-    return {"message": "Job description updated"}
-
-
-# --- Core Endpoint: Upload -> Process -> Return (Stateless) ---
+    global GLOBAL_JOB_DESCRIPTION
+    GLOBAL_JOB_DESCRIPTION = content
+    return {"message": "Job description updated (In-Memory)"}
 
 
 @app.post("/evaluate")
 async def evaluate_resume_endpoint(file: UploadFile = File(...)):
+    # Read file into memory immediately
+    file_bytes = await file.read()
+    file_name = file.filename
+
     async def event_generator():
-        # 1. Save to Temp File
-        yield json.dumps(
-            {"status": "progress", "message": f"Saving {file.filename}..."}
-        ) + "\n"
-        file_ext = os.path.splitext(file.filename)[1]
-        tmp_path = ""
-
         try:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp_file:
-                shutil.copyfileobj(file.file, tmp_file)
-                tmp_path = tmp_file.name
-
-            # 2. Extract Text (OCR)
+            # 1. Start
             yield json.dumps(
-                {"status": "progress", "message": "Extracting text (OCR)..."}
+                {"status": "progress", "message": f"Processing {file_name}..."}
             ) + "\n"
-            resume_text = extract_text_from_pdf(tmp_path)
+
+            # 2. Extract Text (In-Memory)
+            yield json.dumps(
+                {"status": "progress", "message": "Extracting text (Memory Mode)..."}
+            ) + "\n"
+
+            resume_text = extract_text_from_pdf(file_bytes)
 
             if not resume_text or len(resume_text.strip()) == 0:
                 yield json.dumps(
@@ -104,14 +96,13 @@ async def evaluate_resume_endpoint(file: UploadFile = File(...)):
                 return
 
             # 3. Get Job Description
-            if not os.path.exists(JD_FILE):
+            if not GLOBAL_JOB_DESCRIPTION:
                 yield json.dumps(
-                    {"status": "error", "message": "Job description not found."}
+                    {"status": "error", "message": "Job description not set."}
                 ) + "\n"
                 return
 
-            with open(JD_FILE, "r", encoding="utf-8") as f:
-                jd_text = f.read()
+            jd_text = GLOBAL_JOB_DESCRIPTION
 
             # 4. AI Agent Analysis (Streaming Graph)
             yield json.dumps(
@@ -173,9 +164,6 @@ async def evaluate_resume_endpoint(file: UploadFile = File(...)):
         except Exception as e:
             print(f"Error: {e}")
             yield json.dumps({"status": "error", "message": str(e)}) + "\n"
-        finally:
-            if tmp_path and os.path.exists(tmp_path):
-                os.remove(tmp_path)
 
     from fastapi.responses import StreamingResponse
 

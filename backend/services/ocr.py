@@ -1,18 +1,16 @@
 import pymupdf as fitz
+import io
 
 
-def extract_text_from_pdf(pdf_path: str) -> str:
+def extract_text_from_pdf(file_bytes: bytes) -> str:
     """
-    Extracts text from a digital PDF file using PyMuPDF.
-
-    NOTE: This strictly supports DIGITAL PDFs (text-based).
-    Scanned PDFs or Images converted to PDF without an embedded text layer will fail.
-    This decision was made to ensure stability on low-memory environments (Render Free Tier)
-    and avoid the high resource usage of OCR models.
+    Extracts text from a digital PDF file using PyMuPDF from memory bytes.
+    Supports Serverless/Read-Only environments.
     """
     doc = None
     try:
-        doc = fitz.open(pdf_path)
+        # Open PDF from memory stream
+        doc = fitz.open(stream=file_bytes, filetype="pdf")
         full_text = ""
 
         if len(doc) > 0:
@@ -26,13 +24,12 @@ def extract_text_from_pdf(pdf_path: str) -> str:
             print(
                 f"  > Warning: Text length is only {len(clean_text)} chars. Likely a scanned/image PDF."
             )
-            # Return empty to trigger the error handling in main.py
             return ""
 
         return clean_text
 
     except Exception as e:
-        print(f"Error processing PDF {pdf_path}: {e}")
+        print(f"Error processing PDF stream: {e}")
         return ""
 
     finally:

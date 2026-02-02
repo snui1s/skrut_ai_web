@@ -219,19 +219,17 @@ export default function UploadPage() {
               <label className="block text-lg md:text-xl font-bold text-secondary">
                 2. Upload Resumes
               </label>
-              <div 
+              <label 
                 className={`border-2 border-dashed rounded-xl p-6 md:p-10 text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-3 md:gap-4 ${
                   files.length > 0 ? 'border-primary/50 bg-primary/5 shadow-inner' : 'border-secondary/20 hover:border-primary/50 hover:bg-white shadow-sm'
                 }`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                onClick={() => document.getElementById('file-upload')?.click()}
               >
                 <input 
                   type="file" 
-                  id="file-upload" 
                   className="hidden" 
-                  accept=".pdf,.png,.jpg,.jpeg" 
+                  accept=".pdf" 
                   multiple
                   onChange={handleFileChange}
                 />
@@ -241,9 +239,9 @@ export default function UploadPage() {
                 </div>
                 <div>
                    <p className="font-bold text-secondary text-base md:text-lg">Click or Drag & Drop</p>
-                   <p className="text-[10px] md:text-sm text-muted mt-1 uppercase tracking-wider font-semibold">Multiple PDF, Image files allowed</p>
+                   <p className="text-[10px] md:text-sm text-muted mt-1 uppercase tracking-wider font-semibold">PDF files only (Digital)</p>
                 </div>
-              </div>
+              </label>
 
               {/* File List with Status */}
               {files.length > 0 && (
