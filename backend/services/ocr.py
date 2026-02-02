@@ -1,5 +1,5 @@
 import easyocr
-import fitz
+import pymupdf as fitz
 import os
 import tempfile
 import uuid

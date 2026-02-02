@@ -3,7 +3,6 @@ uvicorn
 sqlmodel
 langchain-openai
 langgraph
-fitz
 pymupdf
 python-dotenv
 python-multipart
