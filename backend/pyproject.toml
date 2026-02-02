@@ -10,7 +10,7 @@ dependencies = [
     "sqlmodel",
     "langchain-openai",
     "langgraph",
-    "easyocr",
+
     "pymupdf",
     "python-dotenv",
     "langchain-ollama",
