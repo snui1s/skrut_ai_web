@@ -45,6 +45,11 @@ class EvaluationResult(BaseModel):
     conversation_log: List[dict]
 
 
+@app.head("/")
+def health_check():
+    return {"status": "ok"}
+
+
 @app.get("/")
 def read_root():
     return {"status": "ok", "mode": "privacy-focused"}
@@ -93,7 +98,7 @@ async def evaluate_resume_endpoint(file: UploadFile = File(...)):
                 yield json.dumps(
                     {
                         "status": "error",
-                        "message": "Could not extract text from resume.",
+                        "message": "Could not extract text. System supports DIGITAL PDFS only (no scans/images).",
                     }
                 ) + "\n"
                 return
