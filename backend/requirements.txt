@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlmodel
+langchain-openai
+langgraph
+fitz
+pymupdf
+python-dotenv
+python-multipart
+pydantic
+openai
+langchain-core
+langchain-community
+easyocr
