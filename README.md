@@ -1,94 +1,83 @@
 # Skrut AI
 
-**An intelligent resume evaluation assistant for human resources.**
+**The Intelligent Resume Evaluation Agent for Modern HR.**
 
-Skrut AI is a tool designed to help recruiters evaluate resumes more effectively. It goes beyond simple keyword matching by using a two-agent AI system that looks for transferable skills and candidate potential.
+Skrut AI is a high-performance, privacy-first tool designed to help recruiters evaluate resumes beyond simple keyword matching. By leveraging a multi-agent orchestration pattern, Skrut AI analyzes candidate potential, identifies transferable skills, and provides evidence-based scoring to streamline your hiring process.
 
 ## Key Features
 
-- **Two-Agent System:** The application uses two different AI personas. A "Reviewer" performs the initial analysis, and an "Auditor" checks that analysis for fairness and accuracy. This ensures a balanced evaluation.
-- **Fair Evaluation Approach:** The system is designed to identify related skills. For example, if a job requires one specific tool but a candidate has experience with a similar one, the AI recognizes that experience rather than giving a zero score.
-- **Data Privacy:** To protect candidate privacy, the application is stateless. Resumes are processed in temporary memory and are deleted immediately after the analysis is complete. No candidate data is stored in a database.
-- **Automated Document Reading:** The tool can read standard PDF files as well as scanned images using Optical Character Recognition (OCR).
-- **Transparent Process:** Users can view the discussion log between the AI agents to understand how a specific score or recommendation was reached.
+- **Multi-Agent Review (LangGraph):** Dual-agent system (Reviewer & Auditor) that debates candidate fit to ensure fair, unbiased, and balanced evaluation.
+- **Intelligent Skill Mapping:** Identifies "Skill Families" to recognize transferable potential (e.g., Vue vs. React) beyond rigid keyword matching.
+- **Anti-Hallucination Guardrails:** Strict automated verification of all claims against resume text to prevent "AI inventions" and unverified potential.
+- **Hybrid OCR Engine:** Seamlessly processes both text-based PDFs and scanned images using PyMuPDF and EasyOCR.
+- **Stateless Privacy:** Candidate resumes are processed in-memory and deleted immediately after analysis. No personal data is ever stored in a database.
+- **Professional Exports:** One-click generation of Excel (.xlsx) and CSV reports for easy team sharing and tracking.
+- **Session Continuity:** Automatically recovers your latest evaluation results using browser session storage, preventing data loss.
 
 ## Tech Stack
 
 ### Backend
 
-- **Framework:** FastAPI
-- **AI Logic:** LangChain and LangGraph
-- **Models:** OpenAI
-- **Document Processing:** PyMuPDF and EasyOCR
+- **Framework:** FastAPI (Python 3.12+)
+- **AI Logic:** LangChain & LangGraph Orchestration
+- **Models:** OpenAI GPT-4o-mini (Optimized temperatures per agent role)
+- **Document Processing:** PyMuPDF (Text) & EasyOCR (Scanned images)
 
 ### Frontend
 
-- **Framework:** Next.js
-- **Styling:** Tailwind CSS
+- **Framework:** Next.js 15 (React 19)
+- **Styling:** Tailwind CSS (Modern premium aesthetic)
+- **State Management:** React Hooks & SessionStorage API
 - **Language:** TypeScript
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (v1.0 or higher)
-- [uv](https://docs.astral.sh/uv/) (Python package manager)
-- Python (v3.12 or higher)
+- [Bun](https://bun.sh/) (Fast JS Runtime)
+- [uv](https://docs.astral.sh/uv/) (Extremely fast Python package manager)
 - OpenAI API Key
 
 ### 1. Backend Setup
 
-Go to the `backend` directory:
-
 ```bash
 cd backend
-```
-
-Install the required Python packages:
-
-```bash
-uv sync
-```
-
-Create a `.env` file in the `backend` folder and add your OpenAI API key:
-
-```env
-OPENAI_API_KEY=your_api_key_here
-```
-
-Start the backend server:
-
-```bash
+uv sync  # Installs all dependencies into a virtual environment
+# Create .env and add OPENAI_API_KEY=your_key
 uv run main.py
 ```
 
 ### 2. Frontend Setup
 
-Go to the `frontend` directory:
-
 ```bash
 cd frontend
-```
-
-Install the dependencies:
-
-```bash
 bun install
-```
-
-Start the web application:
-
-```bash
 bun run dev
 ```
 
-## How the Analysis Works
+## System Workflow
 
-1.  **Text Extraction:** The system reads the uploaded resume. If the file is an image or a scan, it uses OCR to find the text.
-2.  **Initial Review:** An AI agent compares the resume to the job description and provides a score and a summary.
-3.  **Quality Check:** A second AI agent reviews the first agent's work. It looks for missed opportunities or unfair judgments.
-4.  **Refinement:** If the second agent finds issues, the first agent updates the analysis. This happens up to three times to ensure the best result.
-5.  **Final Report:** The final evaluation is shown to the user in a clear table.
+```mermaid
+graph TD
+    A[Upload Resume] --> B{File Type?}
+    B -- PDF/Text --> C[Direct Extraction]
+    B -- Scanned/Image --> D[OCR Engine]
+    C --> E[Node 1: Reviewer Agent]
+    D --> E
+    E --> F[Analysis & Scoring]
+    F --> G[Node 2: Auditor Agent]
+    G -- "FAIL (Lacks Evidence)" --> E
+    G -- "PASS (Logically Sound)" --> H[Final Report]
+    H --> I[One-Click Export Excel/CSV]
+```
+
+## How the Analysis Works (The Agent Loop)
+
+1.  **Ingestion:** The system extracts raw text from the uploaded file using the hybrid OCR engine.
+2.  **The Review (Node 1):** The "Reviewer" agent performs a deep dive, looking for strengths, skill family overlaps, and growth areas. It generates a score (0-10).
+3.  **The Audit (Node 2):** The "Auditor" agent (running at 0.0 temperature for maximum consistency) checks the review for logical fallacies or hallucinated skills.
+4.  **The Refinement:** If the Auditor finds the report "unrealistically positive" or "lacking evidence," it sends the report back to Node 1 with specific feedback. This loop repeats up to 3 times until a consensus is reached.
+5.  **Output:** The final, human-verified-like report is presented in a clean, professional dashboard.
 
 ## License
 

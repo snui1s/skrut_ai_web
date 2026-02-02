@@ -1,5 +1,18 @@
+"use client";
+
+import React, { useEffect, useState } from 'react';
 
 export default function Hero() {
+  const [hasRecentResults, setHasRecentResults] = useState(false);
+
+  useEffect(() => {
+    const results = sessionStorage.getItem('latest_analysis_results');
+    const single = sessionStorage.getItem('latest_analysis');
+    if (results || single) {
+      setHasRecentResults(true);
+    }
+  }, []);
+
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen px-4 text-center overflow-hidden">
       {/* Background Gradient/Effect - Minimal */}
@@ -25,6 +38,13 @@ export default function Hero() {
           <a href="/upload" className="px-8 py-4 bg-primary text-white rounded-full font-semibold text-lg hover:bg-opacity-90 transition-all shadow-xl shadow-primary/25 hover:shadow-2xl hover:-translate-y-1">
             Start Evaluating Free
           </a>
+
+          {hasRecentResults && (
+            <a href="/results/latest" className="px-8 py-4 bg-white border-2 border-primary text-primary rounded-full font-semibold text-lg hover:bg-primary/5 transition-all">
+              View Latest Results
+            </a>
+          )}
+
           <a href="#how-it-works" className="px-8 py-4 bg-transparent border-2 border-foreground/20 text-secondary rounded-full font-semibold text-lg hover:bg-foreground/5 transition-all">
             See How It Works
           </a>

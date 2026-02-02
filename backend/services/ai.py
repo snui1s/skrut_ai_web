@@ -35,7 +35,12 @@ class ResumeJudgeGraph:
                 "OPENAI_API_KEY (or OPENAPI_KEY) not found in environment variables."
             )
 
-        self.llm = ChatOpenAI(model=model_name, temperature=0.4, api_key=api_key)
+        self.llm_reviewer = ChatOpenAI(
+            model=model_name, temperature=0.5, api_key=api_key
+        )
+        self.llm_auditor = ChatOpenAI(
+            model=model_name, temperature=0.0, api_key=api_key
+        )
 
     def node_1_reviewer(self, state: GraphState):
         """
@@ -55,25 +60,24 @@ class ResumeJudgeGraph:
                 history_text += f"Tip {i+1}: {feedback}\\n"
 
         system_msg = """
-        Role: You are an Empathetic and Insightful Talent Acquisition Partner.
-        Task: Evaluate the candidate's Resume against the JD with a "Growth Mindset."
-        
+        Role: You are a Professional Talent Acquisition Partner specializing in "Potential-Based Hiring."
+        Task: Evaluate the candidate's Resume against the JD by identifying real, relevant connections between their past experience and the role's requirements.
+
         Evaluation Guidelines:
-        1. **Transferable Skills (Partial Credit)**: If the JD asks for "React" but the candidate has "Vue" or "Angular", DO NOT give 0. Give partial credit (e.g., 6-7/10) because they understand component-based architecture.
-        2. **Potential over Pedigree**: Look for evidence of fast learning or adaptability. If they lack a specific tool but have strong fundamentals, note this as a positive.
-        3. **Constructive Feedback**: Instead of just listing "Missing A, B, C", frame it as "Candidate would be a stronger match if they highlighted experience with [A] or completed a workshop on [B]."
-        
+        1. **Evidence-Based Transferable Skills**: You may give partial credit ONLY for skills within the same family (e.g., Vue for React, Chemical Engineering Data Analysis for General Data Analysis). DO NOT give credit for completely unrelated fields (e.g., Chemical Lab work does not translate to Backend Coding).
+        2. **Growth Mindset with Proof**: "Potential" must be backed by evidence of fast learning in the resume (e.g., certifications, rapid career progression, or self-taught projects). If there is no evidence of learning in a related field, do not assume they have it.
+        3. **Realistic Constructive Feedback**: Identify gaps clearly. Frame them as areas for improvement, but be honest about the distance between the candidate's current state and the 10/10 requirements.
+        4. **If a candidate is a 90% mismatch, do not try to find 'Transferable Skills' from unrelated fields. Be blunt and state: 'No relevant skills found for this role'.**
+        5. **Do not translate or change headers 0, 1, and 2. Use them exactly as specified.**
         Output Requirements (ALWAYS RESPOND IN THAI):
-        0. **Candidate Metadata** (IMPORTANT: Keep name EXACTLY as written in resume, DO NOT translate names):
-           - Name: [Use the EXACT name from the resume - do not translate or transliterate]
+        0. **Candidate Metadata**:
+           - Name: [EXACT name from resume - NO TRANSLATION]
            - Email: [Email Address]
-        1. Score (0-10): Fair score including partial credits for related skills.
+        1. Score (0-10): Be realistic. If the candidate is from a completely different industry with no relevant technical skills, the score should naturally be low (below 3).
         2. Analysis (MUST BE IN THAI): 
-           - **จุดแข็ง (Strengths):** execution, leadership, or technical capability.
-           - **ทักษะที่นำมาปรับใช้ได้ (Transferable Skills):** What skills can they adapt to this role?
-           - **สิ่งที่ต้องพัฒนา (Gaps & Growth Areas):** What specfic skills should they learn to become a 10/10?
-        
-        CRITICAL: All explanations in 'Analysis' MUST be in Thai language only.
+           - **จุดแข็ง (Strengths):** ขีดความสามารถที่โดดเด่นและมีหลักฐานชัดเจนใน Resume
+           - **ทักษะที่นำมาปรับใช้ได้ (Transferable Skills):** ทักษะที่เกี่ยวข้องทางตรรกะหรือสายงานใกล้เคียงกันเท่านั้น (ห้ามแถ)
+           - **สิ่งที่ต้องพัฒนา (Gaps & Growth Areas):** ทักษะทางเทคนิคหรือประสบการณ์ที่ขาดหายไปอย่างชัดเจนเมื่อเทียบกับ JD
         """
 
         user_msg = f"""
@@ -88,7 +92,7 @@ class ResumeJudgeGraph:
         Generate your constructive evaluation now.
         """
 
-        response = self.llm.invoke(
+        response = self.llm_reviewer.invoke(
             [SystemMessage(content=system_msg), HumanMessage(content=user_msg)]
         )
 
@@ -114,19 +118,19 @@ class ResumeJudgeGraph:
         print("\n... Node 2 (Auditor) is verifying...")
 
         system_msg = """
-        Role: You are a Senior HR Mentor & Quality Coach.
-        Task: Review the Recruiter's evaluation to ensure it is fair, constructive, and recognizes potential.
+        Role: You are a Senior HR Auditor & Quality Controller.
+        Task: Audit the Recruiter's evaluation to ensure it is logically sound, evidence-based, and accurately reflects the candidate's fit for the JD.
 
         Verification Checklist:
-        1. **Did they miss Transferable Skills?** If the Recruiter rejected a candidate for missing a tool (e.g., Jira) but they have used similar tools (e.g., Trello/Asana), intervene! Tell them to give partial credit.
-        2. **Is the Tone Constructive?** Ensure the critique is helpful, not just negative. 
-        3. **Accuracy Check:** Ensure they haven't HALLUCINATED skills the candidate doesn't have.
-        
+        1. **Logical Transferable Skills**: Check if the Recruiter missed a skill in the SAME FAMILY. If the JD asks for "Jira" but the candidate has "Asana/Trello", the Recruiter should give credit. HOWEVER, if the JD asks for "Python" and the candidate has "Chemical Engineering Research," do NOT intervene; these are NOT transferable skills.
+        2. **Anti-Hallucination Check**: Did the Recruiter "invent" potential or skills not found in the Resume? If the Recruiter says "the candidate can learn Python" without any proof of coding history, you MUST FAIL the evaluation.
+        3. **No-Nonsense Bias Check**: Ensure the Recruiter is not being "too nice." If a candidate lacks 90% of the core requirements, a score above 3 is illogical. FAIL the evaluation if the score is too high for a weak candidate.
+        4. **If the Reviewer gives a low score (1-3) and correctly identifies that the candidate lacks almost all core requirements, you MUST return 'PASS'. Even if you think the candidate is terrible, as long as the Reviewer agrees they are terrible, the evaluation is ACCURATE.**
         Response Format:
-        - If the evaluation is fair and identifies potential well: Return exactly "PASS".
-        - If the evaluation is too narrow-minded, harsh, or misses transferable connections: Return "FAIL: [Give specific advice in THAI language only on what skills to reconsider]".
-        
-        CRITICAL: Your feedback MUST be in Thai language.
+        - If the evaluation is accurate, logical, and evidence-based: Return exactly "PASS".
+        - If the evaluation is illogical, misses legitimate skill connections, or is UNREALISTICALLY POSITIVE: Return "FAIL: [ระบุจุดบกพร่องตามหลักการและตรรกะเป็นภาษาไทยเท่านั้น]".
+
+        CRITICAL: All feedback must be strictly in Thai. Do not encourage "Potential" without evidence.
         """
 
         user_msg = f"""
@@ -142,7 +146,7 @@ class ResumeJudgeGraph:
         Verify this evaluation as a Mentor.
         """
 
-        response = self.llm.invoke(
+        response = self.llm_auditor.invoke(
             [SystemMessage(content=system_msg), HumanMessage(content=user_msg)]
         )
         result = response.content.strip()

@@ -1,10 +1,11 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import ReactMarkdown from 'react-markdown';
+import * as XLSX from 'xlsx';
 
 interface ChatMessage {
   role: "Reviewer" | "Auditor";
@@ -24,7 +25,18 @@ interface AnalysisResult {
 export default function ResultPage() {
   const [results, setResults] = useState<AnalysisResult[]>([]);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setIsExportOpen(false);
+        }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   useEffect(() => {
     // Load Data
     const storedData = sessionStorage.getItem('latest_analysis_results');
@@ -52,6 +64,51 @@ export default function ResultPage() {
 
   const toggleRow = (index: number) => {
     setExpandedRow(expandedRow === index ? null : index);
+  };
+
+  const exportToCSV = () => {
+    const headers = ["Candidate", "Email", "Score", "Analysis", "Filename"];
+    const rows = results.map(res => [
+      res.candidate_name || "Unknown",
+      res.email || "N/A",
+      res.score,
+      res.analysis.replace(/\n/g, " ").replace(/"/g, '""'),
+      res.filename
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `evaluation_results_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToXLSX = () => {
+    const data = results.map(res => ({
+      "Candidate": res.candidate_name || "Unknown",
+      "Email": res.email || "N/A",
+      "Score": res.score,
+      "Key Analysis": res.analysis.replace(/[#*]/g, ''),
+      "Filename": res.filename
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Results");
+    
+    // Auto-size columns (basic)
+    const maxWidths = [20, 30, 10, 50, 20];
+    worksheet["!cols"] = maxWidths.map(w => ({ wch: w }));
+
+    XLSX.writeFile(workbook, `evaluation_results_${new Date().toISOString().slice(0, 10)}.xlsx`);
   };
 
 
@@ -194,14 +251,43 @@ export default function ResultPage() {
                 </div>
             </div>
             
-             <div className="flex justify-end">
-                <button 
-                  onClick={() => alert("feature coming soon!")}
-                  className="text-secondary/40 text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Export Results to CSV
-                </button>
+             <div className="flex justify-end relative" ref={dropdownRef}>
+                <div className="inline-flex rounded-xl shadow-md overflow-hidden border border-primary/20">
+                    <button 
+                        onClick={exportToXLSX}
+                        className="bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-primary/90 transition-all flex items-center gap-2 border-r border-white/10"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export Results
+                    </button>
+                    <button 
+                        onClick={() => setIsExportOpen(!isExportOpen)}
+                        className="bg-primary text-white px-3 py-2.5 hover:bg-primary/90 transition-all flex items-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${isExportOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                </div>
+
+                {isExportOpen && (
+                    <div className="absolute top-full right-0 mt-3 w-48 bg-white rounded-2xl border border-secondary/10 shadow-2xl overflow-hidden z-50 animate-fade-in-down">
+                        <div className="p-2 space-y-1">
+                            <button 
+                                onClick={() => { exportToXLSX(); setIsExportOpen(false); }}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-secondary hover:bg-primary/5 hover:text-primary rounded-xl transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14.5 2 14.5 8 20 8"/></svg>
+                                Excel (.xlsx)
+                            </button>
+                            <button 
+                                onClick={() => { exportToCSV(); setIsExportOpen(false); }}
+                                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-secondary hover:bg-primary/5 hover:text-primary rounded-xl transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14.5 2 14.5 8 20 8"/><path d="M8 13h2"/><path d="M8 17h2"/></svg>
+                                CSV (.csv)
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
         </div>
