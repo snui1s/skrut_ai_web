@@ -51,14 +51,14 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-24 px-4 md:px-6 relative overflow-hidden bg-background" id="how-it-works">
+    <section className="py-16 px-4 md:py-24 md:px-6 relative overflow-hidden bg-background" id="how-it-works">
       
       <div className="max-w-7xl mx-auto z-10 relative">
-        <div className="text-center mb-16 space-y-4">
+        <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4">
           <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
             How It Works
           </h2>
-          <p className="text-muted max-w-2xl mx-auto text-lg">
+          <p className="text-muted max-w-2xl mx-auto text-base md:text-lg">
              Simple steps to get accurate results.
           </p>
         </div>

@@ -1,0 +1,17 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#F6F1EE"/>
+  
+  <!-- Subtle Gradient Overlays -->
+  <circle cx="1200" cy="0" r="400" fill="#ED7D31" fill-opacity="0.05"/>
+  <circle cx="0" cy="630" r="300" fill="#4F4A45" fill-opacity="0.03"/>
+
+  <!-- Logo Icon (Centered) -->
+  <g transform="translate(420, 150) scale(15)">
+    <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="#ED7D31" stroke="#ED7D31" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Text -->
+  <text x="600" y="520" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="80" text-anchor="middle" fill="#4F4A45">Skrut<tspan fill="#ED7D31">.ai</tspan></text>
+  <text x="600" y="580" font-family="Helvetica, Arial, sans-serif" font-size="32" text-anchor="middle" fill="#6C5F5B" letter-spacing="2">ADVANED AGENTIC RESUME ANALYSIS</text>
+</svg>

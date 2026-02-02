@@ -13,7 +13,8 @@ export default function ComparisonTable() {
         </div>
 
         <div className="overflow-hidden rounded-3xl border border-secondary/10 shadow-sm bg-white/50 backdrop-blur-sm">
-          <div className="grid grid-cols-3">
+          {/* Desktop Version: 3 Columns (hidden on mobile) */}
+          <div className="hidden md:grid grid-cols-3">
             {/* Header Row */}
             <div className="p-6 bg-secondary/5 border-b border-r border-secondary/10 flex flex-col items-center justify-center">
                <span className="font-semibold text-secondary/60">Comparison</span>
@@ -57,6 +58,41 @@ export default function ComparisonTable() {
             <div className="p-6 border-secondary/10 flex flex-col items-center justify-center text-center font-medium text-foreground bg-primary/5">
                <p><span className="text-primary font-bold">Deep.</span> Understands the full career path.</p>
             </div>
+          </div>
+
+          {/* Mobile Version: Stacked Layout (hidden on md and up) */}
+          <div className="md:hidden flex flex-col divide-y divide-secondary/10">
+            {[
+              {
+                feature: "Accuracy",
+                normal: "Can make mistakes or invent facts.",
+                ours: "Verified. We double-check everything."
+              },
+              {
+                feature: "Bias",
+                normal: "Often says what you want to hear.",
+                ours: "Neutral. Based only on the resume facts."
+              },
+              {
+                feature: "Depth",
+                normal: "Matches only simple keywords.",
+                ours: "Deep. Understands the full career path."
+              }
+            ].map((row, idx) => (
+              <div key={idx} className="p-5 space-y-4">
+                <h4 className="font-bold text-secondary text-center uppercase tracking-widest text-xs">{row.feature}</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-4 rounded-2xl bg-red-50/50 border border-red-100 flex flex-col items-center text-center space-y-2">
+                    <span className="text-[10px] font-bold text-red-600/60 uppercase">Normal AI</span>
+                    <p className="text-xs text-muted">{row.normal}</p>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex flex-col items-center text-center space-y-2">
+                    <span className="text-[10px] font-bold text-primary uppercase">Skrut AI</span>
+                    <p className="text-xs text-secondary font-medium">{row.ours}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

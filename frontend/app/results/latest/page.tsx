@@ -115,10 +115,13 @@ export default function ResultPage() {
 
   if (results.length === 0) {
     return (
-        <div className="flex flex-col min-h-screen bg-background items-center justify-center">
-             <Header />
-            <p className="text-secondary animate-pulse mt-20">Loading...</p>
+      <div className="flex flex-col min-h-screen bg-background">
+        <Header />
+        <div className="flex-grow flex flex-col items-center justify-center">
+          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-6"></div>
+          <p className="text-secondary/60 font-bold animate-pulse tracking-wide uppercase text-xs">Preparing Evaluation...</p>
         </div>
+      </div>
     );
   }
 
@@ -127,17 +130,23 @@ export default function ResultPage() {
       <Header />
 
       <main className="flex-grow pt-24 pb-12 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-secondary">Candidate Evaluation Results</h1>
-                <span className="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-bold">
-                    {results.length} Processed
-                </span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h1 className="text-2xl md:text-3xl font-bold text-secondary">Evaluation Results</h1>
+                <div className="flex items-center gap-2">
+                    <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
+                        {results.length} Candidates
+                    </span>
+                    <span className="bg-secondary/5 text-secondary/40 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                        Auto-Sorted by Score
+                    </span>
+                </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-secondary/10 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
+            <div className="bg-white rounded-[2rem] md:rounded-3xl border border-secondary/10 shadow-sm overflow-hidden">
+                {/* Desktop Version: TABLE (hidden on mobile) */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-secondary/5 text-secondary border-b border-secondary/10">
@@ -165,7 +174,7 @@ export default function ResultPage() {
                                                     <span className="text-xs text-secondary/60 mt-0.5">{res.email}</span>
                                                 )}
                                                  <span className="text-[10px] text-secondary/30 mt-1 truncate max-w-[150px]" title={res.filename}>
-                                                    Example: {res.filename}
+                                                    File: {res.filename}
                                                 </span>
                                             </div>
                                         </td>
@@ -188,33 +197,27 @@ export default function ResultPage() {
                                         </td>
                                         <td className="p-6 text-right">
                                             <button className="text-sm font-bold text-primary hover:underline">
-                                                {expandedRow === idx ? 'Close Details' : 'View Details'}
+                                                {expandedRow === idx ? 'Close' : 'View Details'}
                                             </button>
                                         </td>
                                     </tr>
                                     
-                                    {/* Expanded Detail Row */}
+                                    {/* Expanded Detail (Desktop) */}
                                     {expandedRow === idx && (
                                         <tr className="bg-gray-50/50">
                                             <td colSpan={5} className="p-0">
                                                 <div className="p-8 border-t border-secondary/5 space-y-8 animate-fade-in-down">
-                                                    
-                                                    {/* Full Analysis Block */}
                                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                                         <div className="lg:col-span-1">
                                                             <h3 className="text-sm font-bold uppercase text-secondary/50 mb-3">AI Verdict</h3>
-                                                            <div className="bg-white p-5 rounded-xl border border-secondary/10 shadow-sm text-sm text-secondary leading-relaxed prose prose-sm">
+                                                            <div className="bg-white p-5 rounded-xl border border-secondary/10 shadow-sm text-sm text-secondary leading-relaxed prose prose-sm max-w-none">
                                                                 <ReactMarkdown>{res.analysis}</ReactMarkdown>
                                                             </div>
                                                         </div>
-
-                                                        {/* Conversation Log */}
                                                         <div className="lg:col-span-2">
                                                              <div className="flex items-center justify-between mb-3">
                                                                 <h3 className="text-sm font-bold uppercase text-secondary/50">Agent Discussion Log</h3>
-                                                                <span className="text-[10px] bg-secondary/5 px-2 py-1 rounded text-secondary/40">Powered by ResumeJudgeGraph</span>
                                                              </div>
-                                                             
                                                              <div className="bg-white rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
                                                                 <div className="max-h-96 overflow-y-auto p-5 space-y-6">
                                                                      {res.conversation_log && res.conversation_log.map((msg, i) => (
@@ -232,14 +235,10 @@ export default function ResultPage() {
                                                                             </div>
                                                                         </div>
                                                                      ))}
-                                                                     {(!res.conversation_log || res.conversation_log.length === 0) && (
-                                                                         <p className="text-center text-secondary/40 text-sm">No discussion log available.</p>
-                                                                     )}
                                                                 </div>
                                                              </div>
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </td>
                                         </tr>
@@ -248,6 +247,82 @@ export default function ResultPage() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile Version: CARD LIST (hidden on desktop) */}
+                <div className="md:hidden flex flex-col divide-y divide-secondary/5">
+                    {results.map((res, idx) => (
+                        <div key={idx} className="flex flex-col">
+                            <div 
+                                onClick={() => toggleRow(idx)}
+                                className={`p-5 space-y-4 transition-colors cursor-pointer ${expandedRow === idx ? 'bg-primary/5' : ''}`}
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div className="flex flex-col max-w-[70%]">
+                                        <h3 className="font-bold text-secondary text-base leading-tight">
+                                            {res.candidate_name && res.candidate_name !== "Candidate" ? res.candidate_name : "Unknown"}
+                                        </h3>
+                                        {res.email && res.email !== "N/A" && (
+                                            <span className="text-xs text-secondary/60 mt-1 truncate">{res.email}</span>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 bg-white border border-secondary/10 px-2.5 py-1.5 rounded-xl shadow-sm">
+                                        <span className={`text-xl font-black ${
+                                            Number(res.score) >= 7 ? 'text-green-600' : 
+                                            Number(res.score) >= 5 ? 'text-yellow-600' : 'text-red-600'
+                                        }`}>
+                                            {res.score}
+                                        </span>
+                                        <span className="text-[10px] text-secondary/30 font-bold">/10</span>
+                                    </div>
+                                </div>
+                                <p className="text-sm text-secondary/70 line-clamp-2 italic leading-relaxed">
+                                    "{res.analysis.replace(/[#*]/g, '').slice(0, 100)}..."
+                                </p>
+                                <div className="flex items-center justify-between pt-2">
+                                    <span className="text-[10px] text-secondary/20 font-medium truncate max-w-[150px]">
+                                        {res.filename}
+                                    </span>
+                                    <span className="text-xs font-bold text-primary">
+                                        {expandedRow === idx ? 'Hide Results' : 'Read Full Analysis →'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Mobile Expanded Detail */}
+                            {expandedRow === idx && (
+                                <div className="p-5 bg-gray-50/50 border-t border-secondary/5 space-y-8 animate-fade-in-up">
+                                    <div className="space-y-4">
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-secondary/40">AI Verdict</h4>
+                                        <div className="bg-white p-4 rounded-2xl border border-secondary/10 text-sm text-secondary leading-relaxed prose prose-sm max-w-none shadow-sm">
+                                            <ReactMarkdown>{res.analysis}</ReactMarkdown>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-secondary/40">Agent Negotiation</h4>
+                                        <div className="space-y-4">
+                                            {res.conversation_log && res.conversation_log.map((msg, i) => (
+                                                <div key={i} className={`flex gap-3 ${msg.role === 'Auditor' ? 'flex-row-reverse' : ''}`}>
+                                                    <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold ${
+                                                        msg.role === 'Reviewer' ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600'
+                                                    }`}>
+                                                        {msg.role[0]}
+                                                    </div>
+                                                    <div className={`p-3 rounded-2xl text-xs ${
+                                                        msg.role === 'Reviewer' ? 'bg-white text-secondary' : 'bg-orange-50/80 text-secondary'
+                                                    } border border-secondary/5 shadow-sm max-w-[85%]`}>
+                                                        <div className="mb-1 font-black opacity-30 uppercase tracking-tighter text-[9px]">{msg.role}</div>
+                                                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
                 </div>
             </div>
             

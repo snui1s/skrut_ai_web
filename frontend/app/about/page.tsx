@@ -1,29 +1,36 @@
-"use client";
-
 import React from 'react';
+import type { Metadata } from 'next';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WavyDivider from '../components/WavyDivider';
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn how Skrut AI is revolutionizing recruitment with stateless multi-agent AI resume screening.",
+};
 
 export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background font-sans text-foreground">
       <Header />
 
-      <main className="flex-grow pt-32 pb-20 px-4 md:px-8">
-        <div className="max-w-4xl mx-auto space-y-16">
+      <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-20 px-4 md:px-8">
+        <div className="max-w-4xl mx-auto space-y-12 md:space-y-16">
           
           {/* Hero Section */}
-          <section className="text-center space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold text-secondary tracking-tight">
+          <section className="text-center space-y-4 md:space-y-6">
+            <h1 className="text-3xl md:text-6xl font-bold text-secondary tracking-tight">
               Stop drowning in <span className="text-primary italic">Resumes</span>
             </h1>
-            <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base md:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed px-2">
               Recruiters today are overwhelmed. When hundreds of candidates apply for a single role, human fatigue leads to missed talent. Skrut AI was built to handle the scale, so you can focus on the people.
             </p>
           </section>
 
+          <div className="max-w-3xl mx-auto"><WavyDivider variant={1} /></div>
+
           {/* Mission Grid */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-4">
             <div className="space-y-4">
               <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-2">
                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 6.1H3"/><path d="M21 12.1H3"/><path d="M15.1 18.1H3"/></svg>
@@ -43,6 +50,8 @@ export default function AboutPage() {
               </p>
             </div>
           </section>
+
+          <div className="max-w-3xl mx-auto"><WavyDivider variant={3} /></div>
 
           {/* The Advantage Section */}
           <section className="space-y-12">
@@ -84,24 +93,24 @@ export default function AboutPage() {
           </section>
 
           {/* Method section */}
-          <section className="bg-white rounded-[40px] border border-secondary/10 p-8 md:p-12 shadow-sm space-y-8">
-            <h2 className="text-3xl font-bold text-secondary text-center">The "Multi-Agent" Audit</h2>
-            <p className="text-center text-foreground/70 max-w-2xl mx-auto">
+          <section className="bg-white rounded-[2rem] md:rounded-[40px] border border-secondary/10 p-6 md:p-12 shadow-sm space-y-6 md:space-y-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-secondary text-center">The "Multi-Agent" Audit</h2>
+            <p className="text-center text-foreground/70 text-sm md:text-base max-w-2xl mx-auto">
               We don't just rely on one AI. Skrut AI uses a unique <strong>Reviewer-Auditor loop</strong> to ensure fairness.
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-4">
-              <div className="space-y-2 text-center">
-                <div className="text-primary font-bold text-xl">01. Review</div>
-                <p className="text-sm text-foreground/60">An AI Recruiter analyzes the resume for core skills and potential.</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 pt-2 md:pt-4">
+              <div className="space-y-1 md:space-y-2 text-center">
+                <div className="text-primary font-bold text-lg md:text-xl">01. Review</div>
+                <p className="text-xs md:text-sm text-foreground/60">An AI Recruiter analyzes the resume for core skills and potential.</p>
               </div>
-              <div className="space-y-2 text-center">
-                <div className="text-primary font-bold text-xl">02. Audit</div>
-                <p className="text-sm text-foreground/60">A Senior Auditor AI checks the review for bias and evidence accuracy.</p>
+              <div className="space-y-1 md:space-y-2 text-center">
+                <div className="text-primary font-bold text-lg md:text-xl">02. Audit</div>
+                <p className="text-xs md:text-sm text-foreground/60">A Senior Auditor AI checks the review for bias and evidence accuracy.</p>
               </div>
-              <div className="space-y-2 text-center">
-                <div className="text-primary font-bold text-xl">03. Consolidate</div>
-                <p className="text-sm text-foreground/60">The final result is a balanced, honest evaluation you can trust.</p>
+              <div className="space-y-1 md:space-y-2 text-center">
+                <div className="text-primary font-bold text-lg md:text-xl">03. Consolidate</div>
+                <p className="text-xs md:text-sm text-foreground/60">The final result is a balanced, honest evaluation you can trust.</p>
               </div>
             </div>
           </section>

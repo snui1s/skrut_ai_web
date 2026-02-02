@@ -3,18 +3,18 @@ import React from 'react';
 
 export default function WhatIsSkrut() {
   return (
-    <section className="py-24 px-6 bg-background border-t border-b border-secondary/5">
+    <section className="py-16 px-4 md:py-24 md:px-6 bg-background border-t border-b border-secondary/5">
       <div className="max-w-5xl mx-auto">
         
         {/* Intro */}
-        <div className="text-center mb-16 max-w-3xl mx-auto space-y-6">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-sm mb-2">
+        <div className="text-center mb-12 md:mb-16 max-w-3xl mx-auto space-y-4 md:space-y-6">
+          <div className="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs md:text-sm mb-4 md:mb-6">
             The Problem vs The Solution
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
             What is Skrut AI?
           </h2>
-          <p className="text-lg text-muted leading-relaxed">
+          <p className="text-base md:text-lg text-muted leading-relaxed">
             Screening hundreds of resumes manually takes forever. 
             Skrut AI solves this by using <span className="text-secondary font-semibold">Autonomous Agents</span> to do the work for you.
           </p>

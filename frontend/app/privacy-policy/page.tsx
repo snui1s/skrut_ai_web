@@ -1,8 +1,12 @@
-"use client";
-
 import React from 'react';
+import type { Metadata } from 'next';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Our commitment to data privacy and stateless processing of candidate resumes.",
+};
 
 export default function PrivacyPolicy() {
   const lastUpdated = new Date().toLocaleDateString('en-US', {
@@ -15,13 +19,13 @@ export default function PrivacyPolicy() {
     <div className="flex flex-col min-h-screen bg-background font-sans text-foreground">
       <Header />
 
-      <main className="flex-grow pt-32 pb-20 px-4 md:px-8">
+      <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-20 px-4 md:px-8">
         <div className="max-w-3xl mx-auto space-y-12">
           
-          <section className="space-y-4">
-            <h1 className="text-4xl font-bold text-secondary">Privacy Policy</h1>
-            <p className="text-sm text-foreground/50 font-medium">Last Updated: {lastUpdated}</p>
-            <p className="text-lg text-foreground/70 leading-relaxed pt-4">
+          <section className="space-y-3 md:space-y-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-secondary">Privacy Policy</h1>
+            <p className="text-xs md:text-sm text-foreground/50 font-medium tracking-wide uppercase">Last Updated: {lastUpdated}</p>
+            <p className="text-base md:text-lg text-foreground/70 leading-relaxed pt-2 md:pt-4">
               At Skrut AI, we take your privacy and the security of candidate data extremely seriously. 
               Our architecture is built on the principle of <strong>Stateless Processing</strong>, meaning we don't want your data—we just want to help you analyze it.
             </p>

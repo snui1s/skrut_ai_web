@@ -25,13 +25,13 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-24 px-4 bg-background">
+    <section className="py-16 px-4 md:py-24 md:px-6 bg-background">
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
+        <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4">
           <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-muted text-lg">
+          <p className="text-muted text-base md:text-lg">
             Everything you need to know about Skrut AI.
           </p>
         </div>

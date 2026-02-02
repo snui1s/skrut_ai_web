@@ -3,12 +3,14 @@ import Logo from "./Logo";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-white/40 border-t border-secondary/10 py-12 mt-20">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-        {/* Left: Logo Area */}
-        <div className="flex-1 flex flex-col items-center md:items-start">
-          <Logo />
-          <p className="text-[10px] text-muted mt-2 hidden md:block">
+    <footer className="w-full bg-white/40 border-t border-secondary/10 py-10 md:py-12 mt-16 md:mt-20">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+        {/* Left: Brand Text */}
+        <div className="flex-1 flex flex-col items-center md:items-start group">
+          <Link href="/" className="font-bold text-xl tracking-tight text-secondary">
+             Skrut<span className="text-primary">.ai</span>
+          </Link>
+          <p className="text-[10px] text-muted mt-1 hidden md:block">
             Empowering hiring with AI.
           </p>
         </div>

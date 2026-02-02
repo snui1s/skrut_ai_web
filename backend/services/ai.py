@@ -74,7 +74,7 @@ class ResumeJudgeGraph:
            - Name: [EXACT name from resume - NO TRANSLATION]
            - Email: [Email Address]
         1. Score (0-10): Be realistic. If the candidate is from a completely different industry with no relevant technical skills, the score should naturally be low (below 3).
-        2. Analysis (MUST BE IN THAI): 
+        2. Analysis: 
            - **จุดแข็ง (Strengths):** ขีดความสามารถที่โดดเด่นและมีหลักฐานชัดเจนใน Resume
            - **ทักษะที่นำมาปรับใช้ได้ (Transferable Skills):** ทักษะที่เกี่ยวข้องทางตรรกะหรือสายงานใกล้เคียงกันเท่านั้น (ห้ามแถ)
            - **สิ่งที่ต้องพัฒนา (Gaps & Growth Areas):** ทักษะทางเทคนิคหรือประสบการณ์ที่ขาดหายไปอย่างชัดเจนเมื่อเทียบกับ JD

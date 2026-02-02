@@ -1,23 +1,34 @@
-Job Summary
-พัฒนาและประยุกต์ใช้โมเดล AI (โดยเฉพาะ LLMs) เพื่อสร้าง Solution ที่ตอบโจทย์ธุรกิจ เน้นการทำ RAG และการเชื่อมต่อ AI เข้ากับ Software Ecosystem ของบริษัท
+Job Description: Warehouse Staff (พนักงานคลังสินค้า)
+1. Position Summary (ภาพรวมตำแหน่งงาน)
+ดูแลรับผิดชอบการจัดเก็บ จัดเตรียม และตรวจสอบสินค้าภายในคลังสินค้าให้ถูกต้องแม่นยำตามคำสั่งซื้อ เพื่อให้ระบบการหมุนเวียนสินค้าเป็นไปอย่างมีประสิทธิภาพและทันเวลา
 
-Key Responsibilities
-AI Development: ออกแบบและพัฒนา AI Application โดยเน้นเทคนิค RAG และ Agentic AI
+2. Key Responsibilities (หน้าที่ความรับผิดชอบหลัก)
+Inventory Control: รับสินค้าเข้า (Inbound) ตรวจสอบความถูกต้องของจำนวนและสภาพสินค้า พร้อมจัดเก็บเข้าตำแหน่ง (Put-away) ตามที่ระบบกำหนด
 
-System Integration: เชื่อมต่อโมเดลผ่าน API และพัฒนา Backend รองรับ (FastAPI/Node.js)
+Order Picking & Packing: จัดเตรียมสินค้า (Picking) ตามใบสั่งซื้อ และแพ็คสินค้า (Packing) ให้เรียบร้อยตามมาตรฐานความปลอดภัยเพื่อป้องกันความเสียหาย
 
-Data Handling: จัดการข้อมูลและใช้งาน Vector Databases เพื่อเพิ่มประสิทธิภาพการค้นหาข้อมูล
+Stock Counting: ทำการตรวจนับสต็อกประจำวัน (Cycle Count) เพื่อให้ยอดสินค้าในระบบและสินค้าจริงตรงกัน 100%
 
-Technical Requirements
-Stack: Python, LangChain/LlamaIndex, Docker
+Equipment Maintenance: ดูแลรักษาอุปกรณ์ภายในคลังสินค้า (เช่น รถเข็น, เครื่อง Scan Barcode, Handlift) ให้พร้อมใช้งานเสมอ
 
-AI Tools: มีประสบการณ์ใช้งาน OpenAI API, Anthropic หรือ Open-source LLMs
+Safety & Organization: รักษาความสะอาดและความเป็นระเบียบของคลังสินค้าตามมาตรฐาน 5ส และปฏิบัติตามกฎความปลอดภัยในการทำงานอย่างเคร่งครัด
 
-Database: เข้าใจการใช้งาน SQL และ Vector Search (เช่น Chroma, Pinecone หรือ Qdrant)
+3. Qualifications (คุณสมบัติผู้สมัคร)
+Education: วุฒิการศึกษา ม.6, ปวช., ปวส. หรือปริญญาตรีในสาขาที่เกี่ยวข้อง
 
-Mindset: เน้นการแก้ปัญหา (Problem Solving) และสามารถนำ AI Tools มาช่วยเพิ่มความเร็วในการ Dev ได้
+Skills:
 
-Qualifications
-วุฒิปริญญาตรี Computer Science หรือสาขาที่เกี่ยวข้อง
+สามารถใช้งานคอมพิวเตอร์พื้นฐาน หรือโปรแกรมจัดการคลังสินค้า (WMS) ได้จะพิจารณาเป็นพิเศษ
 
-มี Logic ที่แม่นยำ และมีความเข้าใจใน AI Lifecycle
+มีความละเอียดรอบคอบสูง (Attention to detail) และมีความรับผิดชอบ
+
+มีทักษะการคำนวณพื้นฐาน (บวก ลบ คูณ หาร) ที่แม่นยำ
+
+Physical Requirements: สุขภาพร่างกายแข็งแรง สามารถยกของหนักได้ และทำงานในสภาวะคลังสินค้าได้
+
+Experience: หากมีประสบการณ์งานคลังสินค้า หรือขับรถ Forklift ได้ (มีใบเซอร์) จะเป็นข้อได้เปรียบมาก
+
+4. Ideal Candidate Attributes (ลักษณะที่องค์กรต้องการ)
+Growth Mindset: พร้อมเรียนรู้เทคโนโลยีใหม่ๆ (เช่น ระบบสแกน หรือ AI ที่ใช้ในคลังสินค้า)
+
+Adaptability: สามารถทำงานภายใต้ความกดดันและจัดการกับคำสั่งซื้อจำนวนมากในช่วงเวลาเร่งด่วนได้
