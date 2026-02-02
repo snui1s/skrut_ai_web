@@ -10,4 +10,4 @@ pydantic
 openai
 langchain-core
 langchain-community
-easyocr
+
