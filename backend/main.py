@@ -50,7 +50,7 @@ def read_root():
     return {
         "status": "ok",
         "mode": "privacy-focused",
-        "filesysten": "read-only-compatible",
+        "filesystem": "read-only-compatible",
     }
 
 

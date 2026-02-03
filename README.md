@@ -16,7 +16,7 @@ Skrut AI is a high-performance, privacy-first tool designed to help recruiters e
 - **Multi-Agent Review (LangGraph):** Dual-agent system (Reviewer & Auditor) that debates candidate fit to ensure fair, unbiased, and balanced evaluation.
 - **Intelligent Skill Mapping:** Identifies "Skill Families" to recognize transferable potential (e.g., Vue vs. React) beyond rigid keyword matching.
 - **Anti-Hallucination Guardrails:** Strict automated verification of all claims against resume text to prevent "AI inventions" and unverified potential.
-- **Hybrid OCR Engine:** Seamlessly processes both text-based PDFs and scanned images using PyMuPDF and EasyOCR.
+- **High-Performance Text Extraction:** Rapidly processes large PDF documents using PyMuPDF (optimized for speed and memory).
 - **Stateless Privacy:** Candidate resumes are processed in-memory and deleted immediately after analysis. No personal data is ever stored in a database.
 - **Professional Exports:** One-click generation of Excel (.xlsx) and CSV reports for easy team sharing and tracking.
 - **Session Continuity:** Automatically recovers your latest evaluation results using browser session storage, preventing data loss.
@@ -28,7 +28,7 @@ Skrut AI is a high-performance, privacy-first tool designed to help recruiters e
 - **Framework:** FastAPI (Python 3.12+)
 - **AI Logic:** LangChain & LangGraph Orchestration
 - **Models:** OpenAI GPT-4o-mini (Optimized temperatures per agent role)
-- **Document Processing:** PyMuPDF (Text) & EasyOCR (Scanned images)
+- **Document Processing:** PyMuPDF (High-speed text extraction)
 
 ### Frontend
 
@@ -41,9 +41,9 @@ Skrut AI is a high-performance, privacy-first tool designed to help recruiters e
 
 ```text
 ├── backend/
-│   ├── services/           # Core AI & OCR logic
+│   ├── services/           # Core AI & Extraction logic
 │   │   ├── ai.py           # LangGraph agents (Reviewer & Auditor)
-│   │   └── ocr.py          # Hybrid OCR engine
+│   │   └── ocr.py          # Text extraction engine (PyMuPDF)
 │   ├── tests/              # Backend test suite
 │   ├── data/               # Local data storage (Logs/Config)
 │   └── main.py             # FastAPI Entry point
@@ -85,11 +85,8 @@ bun run dev
 
 ```mermaid
 graph TD
-    A[Upload Resume] --> B{File Type?}
-    B -- PDF/Text --> C[Direct Extraction]
-    B -- Scanned/Image --> D[OCR Engine]
-    C --> E[Node 1: Reviewer Agent]
-    D --> E
+    A[Upload Resume] --> B{Process File}
+    B -- "PyMuPDF Extraction" --> E[Node 1: Reviewer Agent]
     E --> F[Analysis & Scoring]
     F --> G[Node 2: Auditor Agent]
     G -- "FAIL (Lacks Evidence)" --> E
@@ -99,7 +96,7 @@ graph TD
 
 ## How the Analysis Works (The Agent Loop)
 
-1.  **Ingestion:** The system extracts raw text from the uploaded file using the hybrid OCR engine.
+1.  **Ingestion:** The system extracts raw text from the uploaded PDF using the high-performance PyMuPDF engine.
 2.  **The Review (Node 1):** The "Reviewer" agent performs a deep dive, looking for strengths, skill family overlaps, and growth areas. It generates a score (0-10).
 3.  **The Audit (Node 2):** The "Auditor" agent (running at 0.0 temperature for maximum consistency) checks the review for logical fallacies or hallucinated skills.
 4.  **The Refinement:** If the Auditor finds the report "unrealistically positive" or "lacking evidence," it sends the report back to Node 1 with specific feedback. This loop repeats up to 3 times until a consensus is reached.

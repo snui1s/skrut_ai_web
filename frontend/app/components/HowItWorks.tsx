@@ -3,8 +3,8 @@ export default function HowItWorks() {
   const steps = [
     {
       id: 1,
-      title: "Hybrid OCR",
-      description: "We extract text from your PDF or image files accurately.",
+      title: "Text Extraction",
+      description: "We extract text from your digital PDF files with high precision.",
       svg: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-primary">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" className="text-secondary "/>
