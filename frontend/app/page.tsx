@@ -1,17 +1,18 @@
-
+import dynamic from 'next/dynamic';
 import Header from "./components/Header";
 import Hero from "./components/Hero";
-import WhatIsSkrut from "./components/WhatIsSkrut";
-import HowItWorks from "./components/HowItWorks";
-import ComparisonTable from "./components/ComparisonTable";
-import FAQ from "./components/FAQ";
-import CTA from "./components/CTA";
-import Footer from "./components/Footer";
 import WavyDivider from "./components/WavyDivider";
+
+const WhatIsSkrut = dynamic(() => import("./components/WhatIsSkrut"));
+const HowItWorks = dynamic(() => import("./components/HowItWorks"));
+const ComparisonTable = dynamic(() => import("./components/ComparisonTable"));
+const FAQ = dynamic(() => import("./components/FAQ"));
+const CTA = dynamic(() => import("./components/CTA"));
+const Footer = dynamic(() => import("./components/Footer"));
 
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen bg-background font-sans text-foreground">
+    <main className="flex flex-col min-h-screen bg-background font-sans text-foreground pb-[env(safe-area-inset-bottom)] antialiased">
       <Header />
       <Hero />
       <div className="max-w-3xl mx-auto px-4 md:px-0"><WavyDivider variant={1} /></div>

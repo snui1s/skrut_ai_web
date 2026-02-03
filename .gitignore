@@ -5,6 +5,11 @@ __pycache__/
 
 resumes/
 
+.agents/
+.claude/
+.codex/
+.opencode/
+
 *.csv
 
 # C extensions

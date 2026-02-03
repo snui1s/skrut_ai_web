@@ -126,14 +126,14 @@ export default function ResultPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans text-foreground">
+    <div className="flex flex-col min-h-screen bg-background font-sans text-foreground pb-[env(safe-area-inset-bottom)] antialiased">
       <Header />
 
       <main className="flex-grow pt-24 pb-12 px-4 md:px-8">
         <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
             
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-secondary">Evaluation Results</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-secondary text-balance">Evaluation Results</h1>
                 <div className="flex items-center gap-2">
                     <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold">
                         {results.length} Candidates
@@ -179,7 +179,7 @@ export default function ResultPage() {
                                             </div>
                                         </td>
                                         <td className="p-6">
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-2 tabular-nums">
                                                 <span className={`text-2xl font-black ${
                                                     Number(res.score) >= 7 ? 'text-green-600' : 
                                                     Number(res.score) >= 5 ? 'text-yellow-600' : 'text-red-600'
@@ -196,8 +196,9 @@ export default function ResultPage() {
                                             </div>
                                         </td>
                                         <td className="p-6 text-right">
-                                            <button className="text-sm font-bold text-primary hover:underline">
-                                                {expandedRow === idx ? 'Close' : 'View Details'}
+                                            <button className="text-sm font-bold text-primary relative group/btn overflow-hidden rounded px-2 py-1">
+                                                <span className="relative z-10">{expandedRow === idx ? 'Close' : 'View Details'}</span>
+                                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover/btn:w-full"></span>
                                             </button>
                                         </td>
                                     </tr>
@@ -221,17 +222,23 @@ export default function ResultPage() {
                                                              <div className="bg-white rounded-xl border border-secondary/10 shadow-sm overflow-hidden">
                                                                 <div className="max-h-96 overflow-y-auto p-5 space-y-6">
                                                                      {res.conversation_log && res.conversation_log.map((msg, i) => (
-                                                                        <div key={i} className={`flex gap-3 ${msg.role === 'Auditor' ? 'flex-row-reverse' : ''}`}>
-                                                                            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold ${
+                                                                        <div key={i} className={`flex gap-4 ${msg.role === 'Auditor' ? 'flex-row-reverse' : ''}`}>
+                                                                            <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-black shadow-sm ${
                                                                                msg.role === 'Reviewer' ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600'
                                                                             }`}>
                                                                                 {msg.role[0]}
                                                                             </div>
-                                                                            <div className={`max-w-[80%] p-3 rounded-lg text-sm ${
-                                                                               msg.role === 'Reviewer' ? 'bg-gray-50 text-secondary' : 'bg-orange-50/50 text-secondary'
+                                                                            <div className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                                                                               msg.role === 'Reviewer' 
+                                                                                ? 'bg-white text-secondary rounded-tl-none border border-secondary/5' 
+                                                                                : 'bg-orange-50 text-secondary rounded-tr-none border border-orange-100'
                                                                             }`}>
-                                                                                <div className="mb-1 text-xs font-bold opacity-50">{msg.role}</div>
-                                                                                 <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                                                                <div className={`mb-2 text-[10px] font-black uppercase tracking-wider ${
+                                                                                    msg.role === 'Reviewer' ? 'text-blue-600/50' : 'text-orange-600/50'
+                                                                                }`}>{msg.role}</div>
+                                                                                 <div className="prose prose-sm max-w-none">
+                                                                                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                      ))}
@@ -255,28 +262,28 @@ export default function ResultPage() {
                         <div key={idx} className="flex flex-col">
                             <div 
                                 onClick={() => toggleRow(idx)}
-                                className={`p-5 space-y-4 transition-colors cursor-pointer ${expandedRow === idx ? 'bg-primary/5' : ''}`}
+                                className={`p-4 md:p-5 space-y-4 transition-colors cursor-pointer ${expandedRow === idx ? 'bg-primary/5' : ''}`}
                             >
-                                <div className="flex justify-between items-start">
-                                    <div className="flex flex-col max-w-[70%]">
-                                        <h3 className="font-bold text-secondary text-base leading-tight">
+                                <div className="flex justify-between items-start gap-4">
+                                    <div className="flex flex-col min-w-0 flex-1">
+                                        <h3 className="font-bold text-secondary text-base leading-tight truncate">
                                             {res.candidate_name && res.candidate_name !== "Candidate" ? res.candidate_name : "Unknown"}
                                         </h3>
                                         {res.email && res.email !== "N/A" && (
                                             <span className="text-xs text-secondary/60 mt-1 truncate">{res.email}</span>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-1.5 bg-white border border-secondary/10 px-2.5 py-1.5 rounded-xl shadow-sm">
-                                        <span className={`text-xl font-black ${
+                                    <div className="flex-shrink-0 flex items-center gap-1 bg-white border border-secondary/10 px-2 py-1.5 rounded-xl shadow-sm tabular-nums">
+                                        <span className={`text-lg font-black ${
                                             Number(res.score) >= 7 ? 'text-green-600' : 
                                             Number(res.score) >= 5 ? 'text-yellow-600' : 'text-red-600'
                                         }`}>
                                             {res.score}
                                         </span>
-                                        <span className="text-[10px] text-secondary/30 font-bold">/10</span>
+                                        <span className="text-[9px] text-secondary/30 font-bold">/10</span>
                                     </div>
                                 </div>
-                                <p className="text-sm text-secondary/70 line-clamp-2 italic leading-relaxed">
+                                <p className="text-sm text-secondary/70 line-clamp-2 italic leading-relaxed text-pretty">
                                     "{res.analysis.replace(/[#*]/g, '').slice(0, 100)}..."
                                 </p>
                                 <div className="flex items-center justify-between pt-2">
@@ -326,22 +333,22 @@ export default function ResultPage() {
                 </div>
             </div>
             
-             <div className="flex justify-end relative" ref={dropdownRef}>
-                <div className="inline-flex rounded-xl shadow-md overflow-hidden border border-primary/20">
-                    <button 
-                        onClick={exportToXLSX}
-                        className="bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-primary/90 transition-all flex items-center gap-2 border-r border-white/10"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Export Results
-                    </button>
-                    <button 
-                        onClick={() => setIsExportOpen(!isExportOpen)}
-                        className="bg-primary text-white px-3 py-2.5 hover:bg-primary/90 transition-all flex items-center"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${isExportOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                </div>
+              <div className="flex justify-end relative" ref={dropdownRef}>
+                 <div className="inline-flex rounded-xl shadow-lg shadow-primary/20 overflow-hidden">
+                     <button 
+                         onClick={exportToXLSX}
+                         className="bg-primary text-white px-6 py-3 text-sm font-bold hover:bg-primary/90 transition-all flex items-center gap-2 border-r border-white/10 active:scale-95"
+                     >
+                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                         Export Results
+                     </button>
+                     <button 
+                         onClick={() => setIsExportOpen(prev => !prev)}
+                         className="bg-primary text-white px-3 py-3 hover:bg-primary/90 transition-all flex items-center active:scale-95"
+                     >
+                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${isExportOpen ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+                     </button>
+                 </div>
 
                 {isExportOpen && (
                     <div className="absolute top-full right-0 mt-3 w-48 bg-white rounded-2xl border border-secondary/10 shadow-2xl overflow-hidden z-50 animate-fade-in-down">

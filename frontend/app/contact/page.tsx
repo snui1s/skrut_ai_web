@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAFAFA] font-sans text-foreground transition-all duration-700">
+    <div className="flex flex-col min-h-screen bg-background font-sans text-foreground pb-[env(safe-area-inset-bottom)] antialiased">
       <Header />
 
       <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-20 px-4 md:px-8">
@@ -19,17 +19,17 @@ export default function ContactPage() {
           
           {/* Hero Section */}
           <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4">
-            <h1 className="text-4xl md:text-7xl font-bold text-secondary tracking-tighter">
+            <h1 className="text-4xl md:text-7xl font-bold text-secondary tracking-tighter text-balance">
               Let's <span className="text-primary italic">Connect.</span>
             </h1>
-            <p className="text-base md:text-lg text-foreground/50 max-w-xl mx-auto font-medium px-4">
+            <p className="text-base md:text-lg text-foreground/50 max-w-xl mx-auto font-medium px-4 text-pretty">
               Whether you're scaling a team or just have a quick question.
             </p>
           </div>
 
           {/* Social Cards */}
           <div className="relative group mx-auto max-w-5xl">
-            <div className="relative bg-white rounded-[40px] border border-secondary/5 shadow-[0_20px_50px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-500 hover:shadow-[0_30px_70px_rgba(0,0,0,0.06)]">
+            <div className="relative bg-white rounded-[40px] border border-secondary/5 shadow-[0_20px_50px_rgba(0,0,0,0.03)] overflow-hidden transition-[box-shadow,transform] duration-500 hover:shadow-[0_30px_70px_rgba(0,0,0,0.06)]">
               <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-secondary/5">
                 
                 {/* Email Section */}
@@ -39,7 +39,7 @@ export default function ContactPage() {
                   </div>
                   <div className="space-y-2 w-full">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">Email</p>
-                    <a href="mailto:p.indulakshana@gmail.com" className="text-[13px] sm:text-sm lg:text-base font-bold text-secondary hover:text-primary transition-colors block whitespace-nowrap">
+                    <a href="mailto:p.indulakshana@gmail.com" className="text-[13px] sm:text-sm lg:text-base font-bold text-secondary hover:text-primary transition-colors block whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-8 rounded-lg">
                       p.indulakshana@gmail.com
                     </a>
                   </div>
@@ -52,7 +52,7 @@ export default function ContactPage() {
                   </div>
                   <div className="space-y-2 w-full text-center">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30">GitHub</p>
-                    <a href="https://github.com/snui1s" target="_blank" rel="noopener noreferrer" className="text-base md:text-lg font-bold text-secondary hover:text-primary transition-colors block">
+                    <a href="https://github.com/snui1s" target="_blank" rel="noopener noreferrer" className="text-base md:text-lg font-bold text-secondary hover:text-primary transition-colors block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-8 rounded-lg">
                       @snui1s
                     </a>
                   </div>
@@ -87,10 +87,10 @@ export default function ContactPage() {
                     <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                     <span className="text-[9px] font-black uppercase tracking-[0.15em] text-secondary/50">Enterprise Solutions</span>
                   </div>
-                  <h3 className="text-4xl md:text-5xl font-bold text-secondary tracking-tight leading-[1.1] mb-6">
+                  <h3 className="text-4xl md:text-5xl font-bold text-secondary tracking-tight leading-[1.1] mb-6 text-balance">
                     On-premise <span className="text-primary italic">Integration.</span>
                   </h3>
-                  <p className="text-base md:text-lg text-foreground/80 leading-relaxed font-medium">
+                  <p className="text-base md:text-lg text-foreground/80 leading-relaxed font-medium text-pretty">
                     Move beyond subscriptions. I specialize in deploying custom hiring infrastructure 
                     directly within your server environment for 100% data ownership and performance.
                   </p>
@@ -112,7 +112,7 @@ export default function ContactPage() {
                           <span className="text-[11px] font-black text-primary bg-primary/5 w-8 h-8 rounded-lg flex items-center justify-center tracking-tighter">0{i + 1}</span>
                           <h4 className="text-[14px] font-black text-secondary uppercase tracking-widest">{step.title}</h4>
                         </div>
-                        <p className="text-[13px] text-foreground/70 leading-relaxed font-medium pl-1 gap-2">
+                        <p className="text-[13px] text-foreground/70 leading-relaxed font-medium pl-1 gap-2 text-pretty">
                           {step.desc}
                         </p>
                       </div>
@@ -121,10 +121,25 @@ export default function ContactPage() {
                     <div className="sm:col-span-2 pt-6">
                       <a 
                         href="mailto:p.indulakshana@gmail.com" 
-                        className="inline-flex items-center gap-4 px-8 py-4 bg-secondary text-white rounded-2xl font-bold text-sm tracking-wide hover:bg-primary hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-secondary/10"
+                        className="group relative inline-flex items-center justify-center px-10 py-5 bg-secondary text-white rounded-2xl font-bold text-sm overflow-hidden transition-all duration-300 hover:bg-primary hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-secondary/10 hover:shadow-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                       >
-                        Enquire for Deployment
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                         <span className="relative z-10 flex items-center gap-3 tracking-wide">
+                            Enquire for Deployment
+                            <svg 
+                              className="w-4 h-4 transition-transform duration-300 transform group-hover:translate-x-1" 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              width="18" 
+                              height="18" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2.5" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                            >
+                                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                            </svg>
+                         </span>
                       </a>
                     </div>
                   </div>
@@ -139,8 +154,8 @@ export default function ContactPage() {
                           </div>
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-bold text-secondary">Recruitment Site Scraper</h4>
-                          <p className="text-sm text-foreground/80 leading-relaxed">
+                          <h4 className="text-lg font-bold text-secondary text-balance">Recruitment Site Scraper</h4>
+                          <p className="text-sm text-foreground/80 leading-relaxed text-pretty">
                             Implemented for <span className="text-secondary font-bold">CPF</span> to automate sourcing from <span className="text-secondary font-bold">leading recruitment platforms</span> using Playwright. 
                             I can extend this core logic to support any major job portals based on your enterprise needs. Feel free to integrate this yourself—just provide attribution.
                           </p>
@@ -159,10 +174,10 @@ export default function ContactPage() {
                           href="https://github.com/snui1s/recruitment_site_scraper" 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between group/link"
+                          className="flex items-center justify-between group/link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-lg p-1"
                         >
                           <span className="text-sm font-bold text-secondary group-hover/link:text-primary transition-colors italic decoration-primary/30 underline underline-offset-4">Explore Source Code</span>
-                          <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center group-hover/link:bg-primary transition-colors">
+                          <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center group-hover/link:bg-primary transition-[background-color] duration-300">
                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                           </div>
                         </a>
@@ -174,7 +189,7 @@ export default function ContactPage() {
 
                 {/* Minimalist Quote / Value Prop */}
                 <div className="pt-8 text-center sm:text-left border-t border-secondary/5">
-                  <p className="text-sm text-foreground/75 italic leading-relaxed max-w-2xl">
+                  <p className="text-sm text-foreground/75 italic leading-relaxed max-w-2xl text-pretty">
                     "I have previously implemented a focused automation pipeline for <span className="font-bold">CPF (Charoen Pokphand Foods)</span> that sources data from <span className="font-bold">major recruitment platforms</span> using <span className="font-bold">Playwright</span>. While the current implementation is portal-specific, I can customize and scale this architecture to support any other recruitment platforms depending on your project requirements, ensuring privacy, speed, and long-term sustainability."
                   </p>
                 </div>

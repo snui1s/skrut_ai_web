@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Hero() {
   const [hasRecentResults, setHasRecentResults] = useState(false);
@@ -19,7 +20,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-background -z-10"></div>
       
       <div className="max-w-5xl w-full flex flex-col items-center text-center space-y-6 md:space-y-8 animate-fade-in-up">        
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-secondary leading-tight">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-secondary leading-tight text-balance">
           Smarter Hiring, <br />
           <span className="text-primary relative inline-block">
             Faster Decisions
@@ -29,34 +30,34 @@ export default function Hero() {
           </span>
         </h1>
         
-        <p className="text-base md:text-xl text-foreground/70 max-w-2xl leading-relaxed">
+        <p className="text-base md:text-xl text-foreground/70 max-w-2xl leading-relaxed text-pretty">
           Transform how you evaluate candidates. Upload resumes and get detailed, AI-driven insights in seconds, not hours.
         </p>
 
         <div className="w-full flex justify-center mt-6">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-2xl px-2">
-            <a 
+            <Link 
               href="/upload" 
-              className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-semibold text-sm hover:bg-opacity-90 transition-all shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 text-center"
+              className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-semibold text-sm hover:bg-opacity-90 transition-[background-color,transform,shadow] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               Start Evaluating Free
-            </a>
+            </Link>
 
             {hasRecentResults && (
-              <a 
+              <Link 
                 href="/results/latest" 
-                className="w-full sm:w-auto px-6 py-3 bg-white border border-primary text-primary rounded-full font-semibold text-sm hover:bg-primary/5 transition-all text-center"
+                className="w-full sm:w-auto px-6 py-3 bg-white border border-primary text-primary rounded-full font-semibold text-sm hover:bg-primary/5 transition-[background-color,transform] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 View Latest Results
-              </a>
+              </Link>
             )}
 
-            <a 
+            <Link 
               href="#how-it-works" 
-              className="w-full sm:w-auto px-6 py-3 bg-transparent border border-foreground/10 text-secondary rounded-full font-semibold text-sm hover:bg-foreground/5 transition-all text-center"
+              className="w-full sm:w-auto px-6 py-3 bg-transparent border border-foreground/10 text-secondary rounded-full font-semibold text-sm hover:bg-foreground/5 transition-[background-color,transform] text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
             >
               See How It Works
-            </a>
+            </Link>
           </div>
         </div>
 

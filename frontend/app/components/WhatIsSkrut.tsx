@@ -11,7 +11,7 @@ export default function WhatIsSkrut() {
           <div className="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-primary/10 text-primary font-bold text-xs md:text-sm mb-4 md:mb-6">
             The Problem vs The Solution
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight text-balance">
             What is Skrut AI?
           </h2>
           <p className="text-base md:text-lg text-muted leading-relaxed">
@@ -24,7 +24,7 @@ export default function WhatIsSkrut() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           
           {/* Reviewer Card */}
-          <div className="p-8 rounded-3xl bg-background border border-secondary/10 hover:border-primary/20 transition-all duration-300 flex flex-col items-center text-center">
+          <div className="p-8 rounded-3xl bg-background border border-secondary/10 hover:border-primary/20 transition-[border-color,transform,shadow] duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col items-center text-center group">
             <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 text-blue-500">
                {/* Search/Eye Icon */}
                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -36,7 +36,7 @@ export default function WhatIsSkrut() {
           </div>
 
           {/* Auditor Card */}
-          <div className="p-8 rounded-3xl bg-background border border-secondary/10 hover:border-primary/20 transition-all duration-300 flex flex-col items-center text-center">
+          <div className="p-8 rounded-3xl bg-background border border-secondary/10 hover:border-primary/20 transition-[border-color,transform,shadow] duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col items-center text-center group">
             <div className="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-6 text-primary">
                {/* Shield/Check Icon */}
                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>

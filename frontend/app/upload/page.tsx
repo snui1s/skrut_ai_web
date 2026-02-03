@@ -6,28 +6,73 @@ import { useRouter } from 'next/navigation';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const LOADING_MESSAGES = [
+    "Agents are reading the resume content...",
+    "Extracting key technical skills...",
+    "Cross-referencing experience with job requirements...",
+    "Reviewer Agent is drafting an initial opinion...",
+    "Auditor Agent is verifying the claims...",
+    "Checking for logical inconsistencies...",
+    "Evaluating cultural fit indicators...",
+    "Synthesizing the final score...",
+    "Preparing your detailed report..."
+];
+
 export default function UploadPage() {
   const router = useRouter();
   const [jobDescription, setJobDescription] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [rememberJd, setRememberJd] = useState(false);
   
   // Progress State
   const [processedCount, setProcessedCount] = useState(0);
   const [currentFileName, setCurrentFileName] = useState('');
   const [loadingStatus, setLoadingStatus] = useState<"idle" | "saving_jd" | "analyzing" | "completed">("idle");
+  const [loadingMessage, setLoadingMessage] = useState(LOADING_MESSAGES[0]);
 
 
-  // Fetch existing JD on mount
+  // Load JD from Session Storage or API
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    fetch(`${apiUrl}/job-description`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.content) setJobDescription(data.content);
-      })
-      .catch(err => console.error("Failed to fetch JD:", err));
+    // 1. Try Session Storage first
+    const savedJd = sessionStorage.getItem('saved_jd');
+    if (savedJd) {
+        setJobDescription(savedJd);
+        setRememberJd(true);
+    } else {
+        // 2. Fallback to API if not in session
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        fetch(`${apiUrl}/job-description`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.content) setJobDescription(data.content);
+        })
+        .catch(err => console.error("Failed to fetch JD:", err));
+    }
   }, []);
+
+  // Save/Clear Session Storage when JD or Preference changes
+  useEffect(() => {
+      if (rememberJd) {
+          sessionStorage.setItem('saved_jd', jobDescription);
+      } else {
+          sessionStorage.removeItem('saved_jd');
+      }
+  }, [jobDescription, rememberJd]);
+
+  // Rotate Loading Messages
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loadingStatus === 'analyzing') {
+        interval = setInterval(() => {
+            setLoadingMessage(prev => {
+                const currentIndex = LOADING_MESSAGES.indexOf(prev);
+                return LOADING_MESSAGES[(currentIndex + 1) % LOADING_MESSAGES.length];
+            });
+        }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [loadingStatus]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -182,14 +227,14 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-sans text-foreground">
+    <div className="flex flex-col min-h-screen bg-background font-sans text-foreground pb-[env(safe-area-inset-bottom)] antialiased">
       <Header />
 
       <main className="flex-grow py-8 md:py-12 px-4 md:px-6">
         <div className="max-w-3xl mx-auto space-y-8 md:space-y-12">
           
           <div className="text-center space-y-4">
-            <h1 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight text-balance">
               Start Evaluation
             </h1>
             <p className="text-base md:text-lg text-muted px-2">
@@ -201,16 +246,28 @@ export default function UploadPage() {
           {/* Main Card Content */}
           <div className={`space-y-6 md:space-y-8 bg-white/50 backdrop-blur-sm p-5 md:p-8 rounded-3xl border border-secondary/10 shadow-sm transition-all duration-500 ${isUploading ? 'opacity-50 pointer-events-none grayscale-[0.5]' : ''}`}>
             
-            {/* Step 1: Job Description */}
             <div className="space-y-3 md:space-y-4">
-              <label className="block text-lg md:text-xl font-bold text-secondary">
-                1. Job Description (JD)
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="block text-lg md:text-xl font-bold text-secondary">
+                    1. Job Description (JD)
+                </label>
+                <button 
+                    onClick={() => setRememberJd(!rememberJd)}
+                    className="flex items-center gap-2 text-xs md:text-sm font-medium text-secondary/60 hover:text-primary transition-colors focus:outline-none group"
+                >
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${rememberJd ? 'bg-primary border-primary text-white' : 'border-secondary/30 group-hover:border-primary'}`}>
+                        {rememberJd && <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3"><polyline points="20 6 9 17 4 12"/></svg>}
+                    </div>
+                    Remember for next time
+                </button>
+              </div>
               <textarea 
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 placeholder="Paste the job description here..."
-                className="w-full h-32 md:h-40 p-4 rounded-xl border border-secondary/20 bg-white focus:outline-none focus:ring-2 focus:ring-primary/50 resize-y text-sm md:text-base text-secondary placeholder:text-muted/50 transition-all font-medium"
+                autoComplete="off"
+                spellCheck={false}
+                className="w-full h-32 md:h-40 p-4 rounded-xl border border-secondary/20 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 resize-y text-sm md:text-base text-secondary placeholder:text-muted/50 transition-[box-shadow,border-color] font-medium"
               />
             </div>
 
@@ -235,7 +292,7 @@ export default function UploadPage() {
                 />
                 
                 <div className="w-12 h-12 md:w-16 md:h-16 bg-secondary/5 text-secondary/40 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" className="md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" className="md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
                 <div>
                    <p className="font-bold text-secondary text-base md:text-lg">Click or Drag & Drop</p>
@@ -308,19 +365,19 @@ export default function UploadPage() {
             
             {/* Submit Button */}
              {!isUploading && (
-                <div className="pt-2">
-                <button 
-                    onClick={handleSubmit}
-                    disabled={isUploading || files.length === 0}
-                    className={`w-full py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg shadow-lg transition-all flex items-center justify-center gap-2 ${
-                    isUploading || files.length === 0
-                        ? 'bg-secondary/10 text-secondary/40 cursor-not-allowed shadow-none' 
-                        : 'bg-primary text-white hover:bg-opacity-90 hover:-translate-y-1 hover:shadow-primary/25 shadow-primary/20'
-                    }`}
-                >
-                     {files.length > 1 ? `Analyze ${files.length} Resumes` : "Analyze Resume"}
-                </button>
-                </div>
+                 <div className="pt-2">
+                 <button 
+                     onClick={handleSubmit}
+                     disabled={isUploading || files.length === 0}
+                     className={`w-full py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg shadow-lg transition-[transform,shadow,background-color] flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                     isUploading || files.length === 0
+                         ? 'bg-secondary/10 text-secondary/40 cursor-not-allowed shadow-none' 
+                         : 'bg-primary text-white hover:bg-opacity-90 hover:-translate-y-1 hover:shadow-primary/25 shadow-primary/20 active:translate-y-0'
+                     }`}
+                 >
+                      {files.length > 1 ? `Analyze ${files.length} Resumes` : "Analyze Resume"}
+                 </button>
+                 </div>
              )}
 
           </div>
@@ -364,7 +421,7 @@ export default function UploadPage() {
                           </div>
                           <p className="italic leading-snug">
                               {loadingStatus === 'analyzing' 
-                                ? "Agents are cross-referencing candidate skills..." 
+                                ? loadingMessage
                                 : "Ensuring honest and precise evaluations."}
                           </p>
                       </div>

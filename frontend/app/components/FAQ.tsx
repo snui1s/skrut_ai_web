@@ -28,10 +28,10 @@ export default function FAQ() {
     <section className="py-16 px-4 md:py-24 md:px-6 bg-background">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12 md:mb-16 space-y-3 md:space-y-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight text-balance">
             Frequently Asked Questions
           </h2>
-          <p className="text-muted text-base md:text-lg">
+          <p className="text-muted text-base md:text-lg text-pretty">
             Everything you need to know about Skrut AI.
           </p>
         </div>
@@ -43,10 +43,12 @@ export default function FAQ() {
               className="border border-secondary/10 rounded-2xl overflow-hidden bg-white/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/20"
             >
               <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                onClick={() => setOpenIndex(prev => prev === index ? null : index)}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${index}`}
+                className="w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
               >
-                <span className={`font-semibold text-lg ${openIndex === index ? 'text-primary' : 'text-secondary'}`}>
+                <span className={`font-semibold text-base md:text-lg ${openIndex === index ? 'text-primary' : 'text-secondary'}`}>
                   {faq.question}
                 </span>
                 <span className={`transform transition-transform duration-300 ${openIndex === index ? 'rotate-180 text-primary' : 'text-secondary/50'}`}>
@@ -57,12 +59,15 @@ export default function FAQ() {
               </button>
               
               <div 
+                id={`faq-answer-${index}`}
+                role="region"
+                aria-labelledby={`faq-question-${index}`}
                 className={`grid transition-all duration-300 ease-in-out ${
-                  openIndex === index ? 'grid-rows-[1fr] opacity-100 pb-6 pointer-events-auto' : 'grid-rows-[0fr] opacity-0 pb-0 pointer-events-none'
+                  openIndex === index ? 'grid-rows-[1fr] opacity-100 pb-5 md:pb-6 pointer-events-auto' : 'grid-rows-[0fr] opacity-0 pb-0 pointer-events-none'
                 }`}
               >
-                <div className="overflow-hidden px-6">
-                   <p className="text-muted leading-relaxed">
+                <div className="overflow-hidden px-5 md:px-6">
+                   <p className="text-sm md:text-base text-muted leading-relaxed">
                      {faq.answer}
                    </p>
                 </div>

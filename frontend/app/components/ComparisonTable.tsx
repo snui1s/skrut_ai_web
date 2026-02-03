@@ -4,10 +4,10 @@ export default function ComparisonTable() {
     <section className="py-24 px-4 bg-background border-t border-secondary/5">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16 space-y-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-secondary tracking-tight text-balance">
             Why Agentic Workflow?
           </h2>
-          <p className="text-muted text-lg max-w-2xl mx-auto">
+          <p className="text-muted text-lg max-w-2xl mx-auto text-pretty">
             Standard AI often hallucinates. We built a multi-agent system to fix that.
           </p>
         </div>
@@ -79,16 +79,16 @@ export default function ComparisonTable() {
                 ours: "Deep. Understands the full career path."
               }
             ].map((row, idx) => (
-              <div key={idx} className="p-5 space-y-4">
-                <h4 className="font-bold text-secondary text-center uppercase tracking-widest text-xs">{row.feature}</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-4 rounded-2xl bg-red-50/50 border border-red-100 flex flex-col items-center text-center space-y-2">
-                    <span className="text-[10px] font-bold text-red-600/60 uppercase">Normal AI</span>
-                    <p className="text-xs text-muted">{row.normal}</p>
+              <div key={idx} className="p-4 md:p-5 space-y-4">
+                <h4 className="font-bold text-secondary text-center uppercase tracking-widest text-[10px] md:text-xs">{row.feature}</h4>
+                <div className="grid grid-cols-2 gap-2 md:gap-3">
+                  <div className="p-3 md:p-4 rounded-2xl bg-red-50/50 border border-red-100 flex flex-col items-center text-center space-y-2">
+                    <span className="text-[9px] font-bold text-red-600/60 uppercase">Normal AI</span>
+                    <p className="text-[11px] leading-tight text-muted">{row.normal}</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex flex-col items-center text-center space-y-2">
-                    <span className="text-[10px] font-bold text-primary uppercase">Skrut AI</span>
-                    <p className="text-xs text-secondary font-medium">{row.ours}</p>
+                  <div className="p-3 md:p-4 rounded-2xl bg-primary/5 border border-primary/10 flex flex-col items-center text-center space-y-2">
+                    <span className="text-[9px] font-bold text-primary uppercase">Skrut AI</span>
+                    <p className="text-[11px] leading-tight text-secondary font-medium">{row.ours}</p>
                   </div>
                 </div>
               </div>
