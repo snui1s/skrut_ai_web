@@ -38,7 +38,7 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-2xl px-2">
             <Link 
               href="/upload" 
-              className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-semibold text-sm hover:bg-opacity-90 transition-[background-color,transform,shadow] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-semibold text-sm hover:bg-primary/90 transition-[background-color,transform,shadow] shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               Start Evaluating Free
             </Link>

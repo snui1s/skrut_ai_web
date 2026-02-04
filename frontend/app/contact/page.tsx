@@ -187,12 +187,7 @@ export default function ContactPage() {
 
                 </div>
 
-                {/* Minimalist Quote / Value Prop */}
-                <div className="pt-8 text-center sm:text-left border-t border-secondary/5">
-                  <p className="text-sm text-foreground/75 italic leading-relaxed max-w-2xl text-pretty">
-                    "I have previously implemented a focused automation pipeline for <span className="font-bold">CPF (Charoen Pokphand Foods)</span> that sources data from <span className="font-bold">major recruitment platforms</span> using <span className="font-bold">Playwright</span>. While the current implementation is portal-specific, I can customize and scale this architecture to support any other recruitment platforms depending on your project requirements, ensuring privacy, speed, and long-term sustainability."
-                  </p>
-                </div>
+
               </div>
             </div>
           </div>

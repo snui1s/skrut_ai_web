@@ -34,44 +34,61 @@ export default function UploadPage() {
 
   // Load JD from Session Storage or API
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     // 1. Try Session Storage first
-    const savedJd = sessionStorage.getItem('saved_jd');
-    if (savedJd) {
-        setJobDescription(savedJd);
-        setRememberJd(true);
-    } else {
-        // 2. Fallback to API if not in session
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-        fetch(`${apiUrl}/job-description`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.content) setJobDescription(data.content);
-        })
-        .catch(err => console.error("Failed to fetch JD:", err));
+    try {
+        const savedJd = sessionStorage.getItem('saved_jd');
+        if (savedJd) {
+            setJobDescription(savedJd);
+            setRememberJd(true);
+            return; // Skip API fetch if found in session
+        }
+    } catch (e) {
+        console.error("Session storage access failed:", e);
     }
+
+    // 2. Fallback to API if not in session or session access failed
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    fetch(`${apiUrl}/job-description`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.content) setJobDescription(data.content);
+    })
+    .catch(err => console.error("Failed to fetch JD:", err));
   }, []);
 
   // Save/Clear Session Storage when JD or Preference changes
   useEffect(() => {
-      if (rememberJd) {
-          sessionStorage.setItem('saved_jd', jobDescription);
-      } else {
-          sessionStorage.removeItem('saved_jd');
+      if (typeof window === 'undefined') return;
+      
+      try {
+          if (rememberJd) {
+              sessionStorage.setItem('saved_jd', jobDescription);
+          } else {
+              sessionStorage.removeItem('saved_jd');
+          }
+      } catch (e) {
+          console.error("Failed to update session storage:", e);
       }
   }, [jobDescription, rememberJd]);
 
   // Rotate Loading Messages
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number | null = null;
     if (loadingStatus === 'analyzing') {
-        interval = setInterval(() => {
+        interval = window.setInterval(() => {
             setLoadingMessage(prev => {
                 const currentIndex = LOADING_MESSAGES.indexOf(prev);
                 return LOADING_MESSAGES[(currentIndex + 1) % LOADING_MESSAGES.length];
             });
         }, 3000);
     }
-    return () => clearInterval(interval);
+    return () => {
+        if (interval !== null) {
+            window.clearInterval(interval);
+        }
+    };
   }, [loadingStatus]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

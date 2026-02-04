@@ -48,7 +48,10 @@ export default function FAQ() {
                 aria-controls={`faq-answer-${index}`}
                 className="w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
               >
-                <span className={`font-semibold text-base md:text-lg ${openIndex === index ? 'text-primary' : 'text-secondary'}`}>
+                <span 
+                  id={`faq-question-${index}`}
+                  className={`font-semibold text-base md:text-lg ${openIndex === index ? 'text-primary' : 'text-secondary'}`}
+                >
                   {faq.question}
                 </span>
                 <span className={`transform transition-transform duration-300 ${openIndex === index ? 'rotate-180 text-primary' : 'text-secondary/50'}`}>
